@@ -1,0 +1,39 @@
+// variables & mixins
+@mixin maxw($size) {
+    @media (max-width: $size + 'px') {
+        @content;
+    }
+}
+
+@mixin minw($size) {
+    @media (min-width: $size + 'px') {
+        @content;
+    }
+}
+
+@mixin haf {
+    &:hover,
+    &:active,
+    &:focus {
+        @content;
+    }
+}
+
+@mixin placeholder {
+    &::-webkit-input-placeholder {
+        @content;
+    }
+    &:-moz-placeholder {
+        @content;
+    }
+    &::-moz-placeholder {
+        @content;
+    }
+    &:-ms-input-placeholder {
+        @content;
+    }
+}
+
+// colors
+// fonts
+// paths

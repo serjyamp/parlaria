@@ -1,18 +1,11 @@
 <main>
 	<div class="container container_start">
-		<div class="logo_block">
-			<img class="logo_img img-responsive" src="img/logo.png" alt="" />
-			<span class="logo_cptn">
-				<span ng-show="!$root.firebaseUser">Welcome to
-					<b>Further</b>
-				</span>
-				<span ng-show="$root.firebaseUser">
-					<b>Further</b> believes in you!</span>
-			</span>
-			<span class="logo_comment">
-				<span ng-show="!$root.firebaseUser">Login to start your bodybuilding</span>
-				<span ng-show="$root.firebaseUser">build your body, dude ;)</span>
-			</span>
+		<div class="start">
+			<div class="start__cptn">Parlaria</div>
+			<div class="start__slogan">the place your language lives</div>
+			<div class="start__login" ng-show="!$root.firebaseUser">
+				<a class="login btn btn-raised btn-lg" ng-click="vm.signIn()">Login</a>
+			</div>
 		</div>
 	</div>
 </main>

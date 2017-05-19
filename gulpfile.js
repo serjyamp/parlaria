@@ -40,11 +40,11 @@ gulp.task('pug', function() {
 });
 
 gulp.task('scss', function() {
-    gulp.src('builds/src/scss/**/*')
+    gulp.src('builds/src/scss/all.scss')
         .pipe(scss())
         .pipe(autoprefixer('> 0%'))
         .pipe(csso())
-        .pipe(concat('css.min.css'))
+        .pipe(concat('styles.min.css'))
         .pipe(gulp.dest('builds/dest/css/'))
         .pipe(connect.reload());
 });
@@ -57,7 +57,7 @@ gulp.task('img', function() {
 
 gulp.task('watch', function() {
     gulp.watch('builds/src/app/**/*.js', ['js']);
-    gulp.watch('builds/src/scss/**/*.scss', ['scss']);
+    gulp.watch('builds/src/scss/**/*', ['scss']);
     gulp.watch('builds/src/**/*.pug', ['pug']);
     gulp.watch('builds/src/img/**/*', ['img']);
 });
