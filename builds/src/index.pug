@@ -1,0 +1,37 @@
+doctype html
+html(ng-app="further")
+head
+	meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
+	title Further
+	base(href="/")
+
+	link(rel="apple-touch-icon", sizes="180x180", href="img/apple-touch-icon.png")
+	link(rel="icon", type="image/png", href="img/favicon-32x32.png", sizes="32x32")
+	link(rel="icon", type="image/png", href="img/favicon-16x16.png", sizes="16x16")
+	link(rel="manifest", href="img/manifest.json")
+	link(rel="mask-icon", href="img/safari-pinned-tab.svg", color="#b2051b")
+	link(rel="shortcut icon", href="img/favicon.ico")
+	meta(name="msapplication-config", content="img/browserconfig.xml")
+	meta(name="theme-color", content="#ffffff")
+		
+	link(rel="stylesheet", href="vendor/bootstrap/css/bootstrap.min.css")
+	link(rel="stylesheet", href="vendor/bootstrap-material-design/bootstrap-material-design.min.css")
+	link(rel="stylesheet", href="vendor/fa/css/font-awesome.min.css")
+	link(rel="stylesheet", href="css/css.min.css")
+body
+	div.wrap
+		div(ng-include="'app/layout/navbar.html'")
+		div(ui-view)
+	footer
+		.container
+			| © 
+			a.footer_link(href="https://www.linkedin.com/in/serjyamp" target="_blank") Serhii Yampolskyi
+			| , 2017. All rights reserved.
+	
+	//- vendor files
+	script(src="vendor/jquery/jquery.min.js")
+	script(src="vendor/bootstrap/js/bootstrap.min.js")
+	//- angularjs dependencies
+	script(src="vendor/angular/angular.concat.js")
+	//- app files
+	script(src="app/app.js")

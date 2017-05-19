@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^4.0.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-connect": "^5.0.0",
+    "gulp-csso": "^3.0.0",
+    "gulp-jsbeautifier": "^2.1.0",
+    "gulp-ng-annotate": "^2.0.0",
+    "gulp-pug": "^3.3.0",
+    "gulp-sass": "^2.3.2",
+    "gulp-uglify": "^2.0.0",
+    "opn": "^4.0.2"
+  }
+}

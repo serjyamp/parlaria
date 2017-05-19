@@ -1,0 +1,14 @@
+main
+	.container.container_start
+		.logo_block
+			img.logo_img.img-responsive(src="img/logo.png", alt="")
+			span.logo_cptn
+				span(ng-show="!$root.firebaseUser")
+					| Welcome to 
+					b Further
+				span(ng-show="$root.firebaseUser")
+					b Further
+					|  believes in you!
+			span.logo_comment
+				span(ng-show="!$root.firebaseUser") Login to start your bodybuilding
+				span(ng-show="$root.firebaseUser") build your body, dude ;)

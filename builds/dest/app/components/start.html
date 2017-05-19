@@ -1,0 +1,18 @@
+<main>
+	<div class="container container_start">
+		<div class="logo_block">
+			<img class="logo_img img-responsive" src="img/logo.png" alt="" />
+			<span class="logo_cptn">
+				<span ng-show="!$root.firebaseUser">Welcome to
+					<b>Further</b>
+				</span>
+				<span ng-show="$root.firebaseUser">
+					<b>Further</b> believes in you!</span>
+			</span>
+			<span class="logo_comment">
+				<span ng-show="!$root.firebaseUser">Login to start your bodybuilding</span>
+				<span ng-show="$root.firebaseUser">build your body, dude ;)</span>
+			</span>
+		</div>
+	</div>
+</main>

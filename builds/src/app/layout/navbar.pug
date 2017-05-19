@@ -1,0 +1,27 @@
+.navbar.navbar-inverse(ng-controller="NavbarCtrl as vm")
+  .container
+    .navbar-header
+      button.navbar-toggle(type='button' data-toggle='collapse' data-target='.navbar-inverse-collapse')
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
+      a.navbar-brand(ui-sref='/') Further
+    .navbar-collapse.collapse.navbar-inverse-collapse
+      ul.nav.navbar-nav
+        li(ui-sref-active="active" ng-if="$root.firebaseUser")
+          a(ui-sref='exercises' href="") exercises
+        li(ui-sref-active="active" ng-if="$root.firebaseUser")
+          a(ui-sref='trainings' href="") trainings
+      ul.nav.navbar-nav.navbar-right
+        li.dropdown
+          a.dropdown-toggle(data-target='#' data-toggle='dropdown' ng-class="{signed : $root.firebaseUser}")
+            span(ng-show="!$root.firebaseUser")
+              | login 
+              b.caret
+            span.userimg(ng-show="$root.firebaseUser")
+              img(ng-src="{{$root.firebaseUser.photoURL}}")
+          ul.dropdown-menu
+            li(ng-if="!$root.firebaseUser")
+              a(ng-click="vm.signIn()").navbar_link Google
+            li(ng-if="$root.firebaseUser")
+              a(ng-click="vm.signOut()").navbar_link Sign out
