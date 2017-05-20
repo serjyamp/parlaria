@@ -2,9 +2,11 @@
   "dependencies": {
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^4.0.0",
+    "gulp-clean-css": "^2.0.12",
     "gulp-concat": "^2.6.0",
     "gulp-connect": "^5.0.0",
     "gulp-csso": "^3.0.0",
+    "gulp-jade": "^1.1.0",
     "gulp-jsbeautifier": "^2.1.0",
     "gulp-ng-annotate": "^2.0.0",
     "gulp-pug": "^3.3.0",
