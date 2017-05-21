@@ -8,7 +8,7 @@ function NavbarCtrl($rootScope, $state, AuthFactory) {
     vm.auth.authVar.$onAuthStateChanged(function(firebaseUser) {
         $rootScope.firebaseUser = firebaseUser;
         if ($rootScope.firebaseUser) {
-            $state.go('exercises');
+            $state.go('words');
         }
     });
 

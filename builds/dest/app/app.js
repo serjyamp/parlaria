@@ -1,12 +1,12 @@
 
-ExercisesCtrl.$inject = ["fire", "$rootScope", "AuthFactory"];
+WordsCtrl.$inject = ["fire", "$rootScope", "AuthFactory"];
 NavbarCtrl.$inject = ["$rootScope", "$state", "AuthFactory"];
 AuthFactory.$inject = ["$firebaseAuth"];
 fire.$inject = ["$log", "$firebaseObject", "$firebaseArray", "$rootScope", "AuthFactory"];angular
     .module('further', [
         'ui.router',
         'further.Navbar',
-        'further.Exercises',
+        'further.Words',
         'further.fire.service',
         'further.auth.factory'
     ])
@@ -15,39 +15,39 @@ fire.$inject = ["$log", "$firebaseObject", "$firebaseArray", "$rootScope", "Auth
 function config($stateProvider, $urlRouterProvider, $locationProvider) {
     // $locationProvider.html5Mode(true);
 
-    $urlRouterProvider.otherwise('/exercises');
+    $urlRouterProvider.otherwise('/words');
 
     $stateProvider
         .state('/', {
             url: '/',
             templateUrl: 'app/components/start.html'
         })
-        .state('exercises', {
-            url: '/exercises',
-            templateUrl: 'app/components/exercises.html',
-            controller: 'ExercisesCtrl',
+        .state('words', {
+            url: '/words',
+            templateUrl: 'app/components/words.html',
+            controller: 'WordsCtrl',
             controllerAs: 'vm'
         });
 }
-angular.module('further.Exercises', [])
-    .controller('ExercisesCtrl', ExercisesCtrl);
+angular.module('further.Words', [])
+    .controller('WordsCtrl', WordsCtrl);
 
-function ExercisesCtrl(fire, $rootScope, AuthFactory) {
+function WordsCtrl(fire, $rootScope, AuthFactory) {
     var vm = this;
     vm.auth = AuthFactory;
-    vm.newex = null;
-    vm.exslist = [];
+    vm.newWord = null;
+    vm.wordsList = [];
     
-    vm.addNewEx = function() {
-        if (vm.newex) {
-            if (fire.addNewEx(vm.newex)){
-                vm.newex = null;
+    vm.addNewWord = function() {
+        if (vm.newWord) {
+            if (fire.addNewWord(vm.newWord)){
+                vm.newWord = null;
             }
         }
     };
 
-    fire.getAllExercises().then(function(_d) {
-        vm.exslist = _d;
+    fire.getAllWords().then(function(_d) {
+        vm.wordsList = _d;
     });
 }
 angular.module('further.Navbar', [])
@@ -60,7 +60,7 @@ function NavbarCtrl($rootScope, $state, AuthFactory) {
     vm.auth.authVar.$onAuthStateChanged(function(firebaseUser) {
         $rootScope.firebaseUser = firebaseUser;
         if ($rootScope.firebaseUser) {
-            $state.go('exercises');
+            $state.go('words');
         }
     });
 
@@ -119,17 +119,17 @@ function fire($log, $firebaseObject, $firebaseArray, $rootScope, AuthFactory) {
 
     var ref = firebase.database().ref();
 
-    // exercises
+    // words
     var uid = vm.auth.authVar.$getAuth().uid;
-    var exercisesRef = ref.child(uid + '/exercises');
-    var allExercises = $firebaseArray(exercisesRef);
+    var wordsRef = ref.child(uid + '/words');
+    var allWords = $firebaseArray(wordsRef);
 
-    vm.getAllExercises = function(cb) {
-        return allExercises.$loaded(cb);
+    vm.getAllWords = function(cb) {
+        return allWords.$loaded(cb);
     };
-    vm.addNewEx = function(ex) {
+    vm.addNewWord = function(ex) {
         var duplicate = false;
-        angular.forEach(allExercises, function(value, key) {
+        angular.forEach(allWords, function(value, key) {
             if (value.$value == ex) {
                 duplicate = true;
                 return;
@@ -137,7 +137,7 @@ function fire($log, $firebaseObject, $firebaseArray, $rootScope, AuthFactory) {
         });
 
         if (!duplicate) {
-            return allExercises.$add(ex);
+            return allWords.$add(ex);
         }
 
         return false;

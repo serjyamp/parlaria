@@ -1,0 +1,40 @@
+<main>
+	<div class="container">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="row">
+					<form ng-submit="vm.addNewWord()">
+						<div class="col-sm-5 col-xs-5 add_item_block">
+							<input class="form-control ex_input" type="text" ng-model="vm.newWord" placeholder="Word" />
+						</div>
+						<div class="col-sm-5 col-xs-5 add_item_block">
+							<input class="form-control ex_input" type="text" ng-model="vm.newWordTranslation" placeholder="Translation" />
+						</div>
+						<div class="col-sm-2 col-xs-2 text-right add_item_plus">
+							<button class="btn btn-raised btn-success simple_btn" type="submit">
+								<i class="fa fa-plus-circle" aria-hidden="true"></i>
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="panel-body">
+				<ul class="words_list">
+					<li class="words_item" ng-repeat="ex in vm.wordsList">
+						<div class="col-sm-5 col-xs-5">
+							<input class="form-control" type="text" ng-model="ex.$value" ng-change="vm.wordsList.$save(ex)" />
+						</div>
+						<div class="col-sm-5 col-xs-5">
+							<input class="form-control" type="text" ng-model="ex.$value" ng-change="vm.wordsList.$save(ex)" />
+						</div>
+						<div class="col-sm-2 col-xs-2 text-right">
+							<button class="btn btn-raised btn-danger simple_btn" ng-click="vm.wordsList.$remove(ex)">
+								<i class="fa fa-times-circle-o" aria-hidden="true"></i>
+							</button>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</main>

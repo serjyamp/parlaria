@@ -19,17 +19,17 @@ function fire($log, $firebaseObject, $firebaseArray, $rootScope, AuthFactory) {
 
     var ref = firebase.database().ref();
 
-    // exercises
+    // words
     var uid = vm.auth.authVar.$getAuth().uid;
-    var exercisesRef = ref.child(uid + '/exercises');
-    var allExercises = $firebaseArray(exercisesRef);
+    var wordsRef = ref.child(uid + '/words');
+    var allWords = $firebaseArray(wordsRef);
 
-    vm.getAllExercises = function(cb) {
-        return allExercises.$loaded(cb);
+    vm.getAllWords = function(cb) {
+        return allWords.$loaded(cb);
     };
-    vm.addNewEx = function(ex) {
+    vm.addNewWord = function(ex) {
         var duplicate = false;
-        angular.forEach(allExercises, function(value, key) {
+        angular.forEach(allWords, function(value, key) {
             if (value.$value == ex) {
                 duplicate = true;
                 return;
@@ -37,7 +37,7 @@ function fire($log, $firebaseObject, $firebaseArray, $rootScope, AuthFactory) {
         });
 
         if (!duplicate) {
-            return allExercises.$add(ex);
+            return allWords.$add(ex);
         }
 
         return false;
