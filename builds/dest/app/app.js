@@ -1,13 +1,11 @@
 
 ExercisesCtrl.$inject = ["fire", "$rootScope", "AuthFactory"];
-TrainingsCtrl.$inject = ["fire", "$rootScope", "AuthFactory"];
 NavbarCtrl.$inject = ["$rootScope", "$state", "AuthFactory"];
 AuthFactory.$inject = ["$firebaseAuth"];
 fire.$inject = ["$log", "$firebaseObject", "$firebaseArray", "$rootScope", "AuthFactory"];angular
     .module('further', [
         'ui.router',
         'further.Navbar',
-        'further.Trainings',
         'further.Exercises',
         'further.fire.service',
         'further.auth.factory'
@@ -15,7 +13,7 @@ fire.$inject = ["$log", "$firebaseObject", "$firebaseArray", "$rootScope", "Auth
     .config(config);
 
 function config($stateProvider, $urlRouterProvider, $locationProvider) {
-    $locationProvider.html5Mode(true);
+    // $locationProvider.html5Mode(true);
 
     $urlRouterProvider.otherwise('/exercises');
 
@@ -23,12 +21,6 @@ function config($stateProvider, $urlRouterProvider, $locationProvider) {
         .state('/', {
             url: '/',
             templateUrl: 'app/components/start.html'
-        })
-        .state('trainings', {
-            url: '/trainings',
-            templateUrl: 'app/components/trainings.html',
-            controller: 'TrainingsCtrl',
-            controllerAs: 'vm'
         })
         .state('exercises', {
             url: '/exercises',
@@ -54,46 +46,10 @@ function ExercisesCtrl(fire, $rootScope, AuthFactory) {
         }
     };
 
-    vm.removeExFromProgram = function(day, exercise) {
-        fire.removeExFromProgram(day, exercise);
-    };
-
     fire.getAllExercises().then(function(_d) {
         vm.exslist = _d;
     });
 }
-angular.module('further.Trainings', [])
-    .controller('TrainingsCtrl', TrainingsCtrl)
-
-function TrainingsCtrl(fire, $rootScope, AuthFactory) {
-    var vm = this;
-    vm.auth = AuthFactory;
-    vm.exslist = [];
-    vm.program = [];
-
-    fire.getProgram().then(function(_d) {
-        vm.program = _d;
-    });
-
-    fire.getAllExercises().then(function(_d) {
-        vm.exslist = _d;
-    });
-
-    vm.removeExFromProgram = function(day, exercise) {
-        fire.removeExFromProgram(day, exercise);
-    };
-
-    vm.newProgramExDay = null;
-    vm.newProgramExName = null;
-    vm.newProgramExSets = null;
-    vm.newProgramExRepeats = null;
-    vm.addExToProgram = function() {
-        if (vm.newProgramExDay && vm.newProgramExName && vm.newProgramExSets && vm.newProgramExRepeats) {
-            fire.addExToProgram(vm.newProgramExDay, vm.newProgramExName, vm.newProgramExSets, vm.newProgramExRepeats);
-        }
-    };
-}
-
 angular.module('further.Navbar', [])
     .controller('NavbarCtrl', NavbarCtrl);
 
@@ -144,11 +100,12 @@ function AuthFactory($firebaseAuth) {
 
 // Initialize Firebase
 var config = {
-    apiKey: "AIzaSyDLAofEFCEF-s0_oyxVePgmRQPq-PSh5nk",
-    authDomain: "futher-afd4a.firebaseapp.com",
-    databaseURL: "https://futher-afd4a.firebaseio.com",
-    storageBucket: "futher-afd4a.appspot.com",
-    messagingSenderId: "248990263259"
+    apiKey: "AIzaSyCEzgvtuQYnoz3JbmlIkJoSRPiDuXJrTwQ",
+    authDomain: "parlaria-9a874.firebaseapp.com",
+    databaseURL: "https://parlaria-9a874.firebaseio.com",
+    projectId: "parlaria-9a874",
+    storageBucket: "parlaria-9a874.appspot.com",
+    messagingSenderId: "630755092176"
 };
 firebase.initializeApp(config);
 
@@ -184,41 +141,5 @@ function fire($log, $firebaseObject, $firebaseArray, $rootScope, AuthFactory) {
         }
 
         return false;
-    };
-
-    // program
-    var programRef = ref.child(uid + '/program');
-    var programArr = $firebaseArray(programRef);
-
-    vm.getProgram = function(cb) {
-        return programArr.$loaded(cb);
-    };
-
-    var pathToProgram = uid + '/program/';
-    var daysRef = {
-        Monday: $firebaseArray(ref.child(pathToProgram + 'Monday')),
-        Tuesday: $firebaseArray(ref.child(pathToProgram + 'Tuesday')),
-        Wednesday: $firebaseArray(ref.child(pathToProgram + 'Wednesday')),
-        Thursday: $firebaseArray(ref.child(pathToProgram + 'Thursday')),
-        Friday: $firebaseArray(ref.child(pathToProgram + 'Friday')),
-        Saturday: $firebaseArray(ref.child(pathToProgram + 'Saturday')),
-        Sunday: $firebaseArray(ref.child(pathToProgram + 'Sunday'))
-    };
-
-    vm.removeExFromProgram = function(day, exercise) {
-        var dayArr = daysRef[day];
-        var item = dayArr[exercise];
-        return dayArr.$remove(item);
-    };
-
-    vm.addExToProgram = function(day, name, sets, repeats) {
-        var obj = {
-            name: name,
-            sets: sets,
-            repeats: repeats
-        };
-
-        var dayArr = daysRef[day];
-        return dayArr.$add(obj);
     };
 }

@@ -1,10 +1,11 @@
 // Initialize Firebase
 var config = {
-    apiKey: "AIzaSyDLAofEFCEF-s0_oyxVePgmRQPq-PSh5nk",
-    authDomain: "futher-afd4a.firebaseapp.com",
-    databaseURL: "https://futher-afd4a.firebaseio.com",
-    storageBucket: "futher-afd4a.appspot.com",
-    messagingSenderId: "248990263259"
+    apiKey: "AIzaSyCEzgvtuQYnoz3JbmlIkJoSRPiDuXJrTwQ",
+    authDomain: "parlaria-9a874.firebaseapp.com",
+    databaseURL: "https://parlaria-9a874.firebaseio.com",
+    projectId: "parlaria-9a874",
+    storageBucket: "parlaria-9a874.appspot.com",
+    messagingSenderId: "630755092176"
 };
 firebase.initializeApp(config);
 
@@ -40,41 +41,5 @@ function fire($log, $firebaseObject, $firebaseArray, $rootScope, AuthFactory) {
         }
 
         return false;
-    };
-
-    // program
-    var programRef = ref.child(uid + '/program');
-    var programArr = $firebaseArray(programRef);
-
-    vm.getProgram = function(cb) {
-        return programArr.$loaded(cb);
-    };
-
-    var pathToProgram = uid + '/program/';
-    var daysRef = {
-        Monday: $firebaseArray(ref.child(pathToProgram + 'Monday')),
-        Tuesday: $firebaseArray(ref.child(pathToProgram + 'Tuesday')),
-        Wednesday: $firebaseArray(ref.child(pathToProgram + 'Wednesday')),
-        Thursday: $firebaseArray(ref.child(pathToProgram + 'Thursday')),
-        Friday: $firebaseArray(ref.child(pathToProgram + 'Friday')),
-        Saturday: $firebaseArray(ref.child(pathToProgram + 'Saturday')),
-        Sunday: $firebaseArray(ref.child(pathToProgram + 'Sunday'))
-    };
-
-    vm.removeExFromProgram = function(day, exercise) {
-        var dayArr = daysRef[day];
-        var item = dayArr[exercise];
-        return dayArr.$remove(item);
-    };
-
-    vm.addExToProgram = function(day, name, sets, repeats) {
-        var obj = {
-            name: name,
-            sets: sets,
-            repeats: repeats
-        };
-
-        var dayArr = daysRef[day];
-        return dayArr.$add(obj);
     };
 }

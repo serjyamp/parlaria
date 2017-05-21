@@ -9,9 +9,7 @@
     .navbar-collapse.collapse.navbar-inverse-collapse
       ul.nav.navbar-nav
         li(ui-sref-active="active" ng-if="$root.firebaseUser")
-          a(ui-sref='exercises' href="") exercises
-        li(ui-sref-active="active" ng-if="$root.firebaseUser")
-          a(ui-sref='trainings' href="") trainings
+          a(ui-sref='dictionary' href="") dictionary
       ul.nav.navbar-nav.navbar-right
         li.dropdown
           a.dropdown-toggle(data-target='#' data-toggle='dropdown' ng-class="{signed : $root.firebaseUser}")

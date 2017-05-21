@@ -2,7 +2,6 @@ angular
     .module('further', [
         'ui.router',
         'further.Navbar',
-        'further.Trainings',
         'further.Exercises',
         'further.fire.service',
         'further.auth.factory'
@@ -10,7 +9,7 @@ angular
     .config(config);
 
 function config($stateProvider, $urlRouterProvider, $locationProvider) {
-    $locationProvider.html5Mode(true);
+    // $locationProvider.html5Mode(true);
 
     $urlRouterProvider.otherwise('/exercises');
 
@@ -18,12 +17,6 @@ function config($stateProvider, $urlRouterProvider, $locationProvider) {
         .state('/', {
             url: '/',
             templateUrl: 'app/components/start.html'
-        })
-        .state('trainings', {
-            url: '/trainings',
-            templateUrl: 'app/components/trainings.html',
-            controller: 'TrainingsCtrl',
-            controllerAs: 'vm'
         })
         .state('exercises', {
             url: '/exercises',

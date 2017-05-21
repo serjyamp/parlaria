@@ -15,10 +15,6 @@ function ExercisesCtrl(fire, $rootScope, AuthFactory) {
         }
     };
 
-    vm.removeExFromProgram = function(day, exercise) {
-        fire.removeExFromProgram(day, exercise);
-    };
-
     fire.getAllExercises().then(function(_d) {
         vm.exslist = _d;
     });
