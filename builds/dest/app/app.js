@@ -1,10 +1,11 @@
 
 NotesCtrl.$inject = ["fire", "$rootScope", "AuthFactory"];
 WordsCtrl.$inject = ["fire", "$rootScope", "AuthFactory"];
-NavbarCtrl.$inject = ["$rootScope", "$state", "AuthFactory"];
+NavbarCtrl.$inject = ["$rootScope", "$state", "$mdDialog", "AuthFactory"];
 AuthFactory.$inject = ["$firebaseAuth"];
 fire.$inject = ["$log", "$firebaseObject", "$firebaseArray", "$rootScope", "AuthFactory"];angular
     .module('further', [
+        'ngMaterial',
         'ui.router',
         'further.Navbar',
         'further.Words',
@@ -14,8 +15,14 @@ fire.$inject = ["$log", "$firebaseObject", "$firebaseArray", "$rootScope", "Auth
     ])
     .config(config);
 
-function config($stateProvider, $urlRouterProvider, $locationProvider) {
+function config($stateProvider, $urlRouterProvider, $locationProvider, $mdIconProvider, $mdThemingProvider) {
     // $locationProvider.html5Mode(true);
+    $mdThemingProvider.theme('default')
+        .primaryPalette('grey')
+        .accentPalette('orange');
+    $mdIconProvider
+      .iconSet('social', 'img/icons/sets/social-icons.svg', 24)
+      .defaultIconSet('img/icons/sets/core-icons.svg', 24);
 
     $urlRouterProvider.otherwise('/words');
 
@@ -86,7 +93,7 @@ function WordsCtrl(fire, $rootScope, AuthFactory) {
 angular.module('further.Navbar', [])
     .controller('NavbarCtrl', NavbarCtrl);
 
-function NavbarCtrl($rootScope, $state, AuthFactory) {
+function NavbarCtrl($rootScope, $state, $mdDialog, AuthFactory) {
     var vm = this;
     vm.auth = AuthFactory;
 
@@ -106,6 +113,37 @@ function NavbarCtrl($rootScope, $state, AuthFactory) {
     };
 
     vm.photoURL = null;
+
+    // dropdown menu
+    var originatorEv;
+
+    this.openMenu = function($mdMenu, ev) {
+      originatorEv = ev;
+      $mdMenu.open(ev);
+    };
+
+    this.notificationsEnabled = true;
+    this.toggleNotifications = function() {
+      this.notificationsEnabled = !this.notificationsEnabled;
+    };
+
+    this.redial = function() {
+      $mdDialog.show(
+        $mdDialog.alert()
+          .targetEvent(originatorEv)
+          .clickOutsideToClose(true)
+          .parent('body')
+          .title('Suddenly, a redial')
+          .textContent('You just called a friend; who told you the most amazing story. Have a cookie!')
+          .ok('That was easy')
+      );
+
+      originatorEv = null;
+    };
+
+    this.checkVoicemail = function() {
+      // This never happens.
+    };
 }
 angular
     .module("further.auth.factory", ["firebase"])

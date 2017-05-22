@@ -15,23 +15,24 @@
 	<link rel="shortcut icon" href="img/favicon.ico">
 	<meta name="msapplication-config" content="img/browserconfig.xml">
 	<meta name="theme-color" content="#ffffff">
-	<link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
-	<link rel="stylesheet" href="vendor/bootstrap-material-design/bootstrap-material-design.min.css">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link rel="stylesheet" href="vendor/fa/css/font-awesome.min.css">
+	<link rel="stylesheet" href="vendor/angular/angular-material.min.css">
 	<link rel="stylesheet" href="css/styles.min.css">
 </head>
 
-<body>
-	<div class="wrap">
-		<div ng-include="'app/layout/navbar.html'"></div>
+<body layout="column" layout-fill>
+	<div ng-include="'app/layout/navbar.html'"></div>
+	<main class="md-padding" layout="row" flex>
 		<div ui-view></div>
-	</div>
+	</main>
 	<footer>
-		<div class="container">©
-			<a class="footer_link" href="https://www.linkedin.com/in/serjyamp" target="_blank">Serhii Yampolskyi</a>, 2017. All rights reserved.</div>
+		<div layout="row" layout-align="center center">
+			<div class="container">©
+				<a class="footer_link" href="https://www.linkedin.com/in/serjyamp" target="_blank">Serhii Yampolskyi</a>, 2017. All rights reserved.</div>
+		</div>
 	</footer>
 	<script src="vendor/jquery/jquery.min.js"></script>
-	<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
 	<script src="vendor/angular/angular.concat.js"></script>
 	<script src="app/app.js"></script>
 </body>

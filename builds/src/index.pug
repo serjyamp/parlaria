@@ -14,23 +14,27 @@ head
 	meta(name="msapplication-config", content="img/browserconfig.xml")
 	meta(name="theme-color", content="#ffffff")
 		
-	link(rel="stylesheet", href="vendor/bootstrap/css/bootstrap.min.css")
-	link(rel="stylesheet", href="vendor/bootstrap-material-design/bootstrap-material-design.min.css")
+	//- link(rel="stylesheet", href="vendor/bootstrap/css/bootstrap.min.css")
+	//- link(rel="stylesheet", href="vendor/bootstrap-material-design/bootstrap-material-design.min.css")
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	link(rel="stylesheet", href="vendor/fa/css/font-awesome.min.css")
+	link(rel="stylesheet", href="vendor/angular/angular-material.min.css")
 	link(rel="stylesheet", href="css/styles.min.css")
-body
-	div.wrap
-		div(ng-include="'app/layout/navbar.html'")
+body(layout="column" layout-fill)
+	div(ng-include="'app/layout/navbar.html'")
+	main(class='md-padding' layout="row" flex)
 		div(ui-view)
 	footer
-		.container
-			| © 
-			a.footer_link(href="https://www.linkedin.com/in/serjyamp" target="_blank") Serhii Yampolskyi
-			| , 2017. All rights reserved.
-	
+		div(layout="row" layout-align="center center")
+			.container
+				| © 
+				a.footer_link(href="https://www.linkedin.com/in/serjyamp" target="_blank") Serhii Yampolskyi
+				| , 2017. All rights reserved.
+
+
 	//- vendor files
 	script(src="vendor/jquery/jquery.min.js")
-	script(src="vendor/bootstrap/js/bootstrap.min.js")
+	//- script(src="vendor/bootstrap/js/bootstrap.min.js")
 	//- angularjs dependencies
 	script(src="vendor/angular/angular.concat.js")
 	//- app files

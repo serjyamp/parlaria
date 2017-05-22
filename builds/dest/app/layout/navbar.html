@@ -1,42 +1,29 @@
-<div class="navbar navbar-inverse" ng-controller="NavbarCtrl as vm">
-	<div class="container">
-		<div class="navbar-header">
-			<button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-inverse-collapse">
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-			<a class="navbar-brand" ui-sref="/">Parlaria</a>
+<div ng-controller="NavbarCtrl as vm">
+	<md-toolbar layout="row" layout-align="center start">
+		<div class="layout-max-width" layout="row" flex="">
+			<div flex="20" layout="column">
+				<a class="logo" ui-sref="/">Parlaria</a>
+			</div>
+			<div flex="auto" layout="column">
+				<md-nav-bar md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links" layout="row" layout-align="center start">
+					<md-nav-item md-nav-sref="words" name="words">Words</md-nav-item>
+					<md-nav-item md-nav-sref="notes" name="notes">Notes</md-nav-item>
+				</md-nav-bar>
+			</div>
+			<div flex="20" layout="column" layout-align="center end">
+				<md-menu>
+					<md-button class="md-icon-button" aria-label="Menu" ng-click="vm.openMenu($mdMenu, $event)">MENU
+						<md-icon md-menu-origin="" md-svg-icon="call:phone"></md-icon>
+					</md-button>
+					<md-menu-content width="4">
+						<md-menu-item>
+							<md-button ng-click="vm.redial($event)">
+								<md-icon md-svg-icon="call:dialpad" md-menu-align-target=""></md-icon>Redial
+							</md-button>
+						</md-menu-item>
+					</md-menu-content>
+				</md-menu>
+			</div>
 		</div>
-		<div class="navbar-collapse collapse navbar-inverse-collapse">
-			<ul class="nav navbar-nav">
-				<li ui-sref-active="active" ng-if="$root.firebaseUser">
-					<a ui-sref="words" href="">words</a>
-				</li>
-				<li ui-sref-active="active" ng-if="$root.firebaseUser">
-					<a ui-sref="notes" href="">notes</a>
-				</li>
-			</ul>
-			<ul class="nav navbar-nav navbar-right">
-				<li class="dropdown">
-					<a class="dropdown-toggle" data-target="#" data-toggle="dropdown" ng-class="{signed : $root.firebaseUser}">
-						<span ng-show="!$root.firebaseUser">Login
-							<b class="caret"></b>
-						</span>
-						<span class="userimg" ng-show="$root.firebaseUser">
-							<img ng-src="{{$root.firebaseUser.photoURL}}" />
-						</span>
-					</a>
-					<ul class="dropdown-menu">
-						<li ng-if="!$root.firebaseUser">
-							<a class="navbar_link" ng-click="vm.signIn()">Google</a>
-						</li>
-						<li ng-if="$root.firebaseUser">
-							<a class="navbar_link" ng-click="vm.signOut()">Sign out</a>
-						</li>
-					</ul>
-				</li>
-			</ul>
-		</div>
-	</div>
+	</md-toolbar>
 </div>
