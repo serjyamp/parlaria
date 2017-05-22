@@ -10,11 +10,13 @@
       ul.nav.navbar-nav
         li(ui-sref-active="active" ng-if="$root.firebaseUser")
           a(ui-sref='words' href="") words
+        li(ui-sref-active="active" ng-if="$root.firebaseUser")
+          a(ui-sref='notes' href="") notes
       ul.nav.navbar-nav.navbar-right
         li.dropdown
           a.dropdown-toggle(data-target='#' data-toggle='dropdown' ng-class="{signed : $root.firebaseUser}")
             span(ng-show="!$root.firebaseUser")
-              | login 
+              | Login 
               b.caret
             span.userimg(ng-show="$root.firebaseUser")
               img(ng-src="{{$root.firebaseUser.photoURL}}")

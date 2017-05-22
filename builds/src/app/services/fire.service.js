@@ -18,28 +18,36 @@ function fire($log, $firebaseObject, $firebaseArray, $rootScope, AuthFactory) {
     vm.auth = AuthFactory;
 
     var ref = firebase.database().ref();
-
-    // words
     var uid = vm.auth.authVar.$getAuth().uid;
+
+    // WORDS
     var wordsRef = ref.child(uid + '/words');
     var allWords = $firebaseArray(wordsRef);
 
     vm.getAllWords = function(cb) {
         return allWords.$loaded(cb);
     };
-    vm.addNewWord = function(ex) {
+    vm.addNewWord = function(word, translation) {
         var duplicate = false;
         angular.forEach(allWords, function(value, key) {
-            if (value.$value == ex) {
+            if (value.word == word) {
                 duplicate = true;
                 return;
             }
         });
 
         if (!duplicate) {
-            return allWords.$add(ex);
+            var obj = {
+                word: word,
+                translation: translation
+            };
+
+            return allWords.$add(obj);
         }
 
         return false;
     };
+
+    // NOTES
+    
 }

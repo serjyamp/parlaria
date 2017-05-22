@@ -3,6 +3,7 @@ angular
         'ui.router',
         'further.Navbar',
         'further.Words',
+        'further.Notes',
         'further.fire.service',
         'further.auth.factory'
     ])
@@ -22,6 +23,12 @@ function config($stateProvider, $urlRouterProvider, $locationProvider) {
             url: '/words',
             templateUrl: 'app/components/words.html',
             controller: 'WordsCtrl',
+            controllerAs: 'vm'
+        })
+        .state('notes', {
+            url: '/notes',
+            templateUrl: 'app/components/notes.html',
+            controller: 'NotesCtrl',
             controllerAs: 'vm'
         });
 }

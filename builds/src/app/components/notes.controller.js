@@ -1,7 +1,7 @@
-angular.module('further.Words', [])
-    .controller('WordsCtrl', WordsCtrl);
+angular.module('further.Notes', [])
+    .controller('NotesCtrl', NotesCtrl);
 
-function WordsCtrl(fire, $rootScope, AuthFactory) {
+function NotesCtrl(fire, $rootScope, AuthFactory) {
     var vm = this;
     vm.auth = AuthFactory;
     vm.newWord = null;

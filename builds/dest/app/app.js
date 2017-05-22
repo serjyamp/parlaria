@@ -1,4 +1,5 @@
 
+NotesCtrl.$inject = ["fire", "$rootScope", "AuthFactory"];
 WordsCtrl.$inject = ["fire", "$rootScope", "AuthFactory"];
 NavbarCtrl.$inject = ["$rootScope", "$state", "AuthFactory"];
 AuthFactory.$inject = ["$firebaseAuth"];
@@ -7,6 +8,7 @@ fire.$inject = ["$log", "$firebaseObject", "$firebaseArray", "$rootScope", "Auth
         'ui.router',
         'further.Navbar',
         'further.Words',
+        'further.Notes',
         'further.fire.service',
         'further.auth.factory'
     ])
@@ -27,7 +29,36 @@ function config($stateProvider, $urlRouterProvider, $locationProvider) {
             templateUrl: 'app/components/words.html',
             controller: 'WordsCtrl',
             controllerAs: 'vm'
+        })
+        .state('notes', {
+            url: '/notes',
+            templateUrl: 'app/components/notes.html',
+            controller: 'NotesCtrl',
+            controllerAs: 'vm'
         });
+}
+angular.module('further.Notes', [])
+    .controller('NotesCtrl', NotesCtrl);
+
+function NotesCtrl(fire, $rootScope, AuthFactory) {
+    var vm = this;
+    vm.auth = AuthFactory;
+    vm.newWord = null;
+    vm.newWordTranslation = null;
+    vm.wordsList = [];
+    
+    vm.addNewWord = function() {
+        if (vm.newWord && vm.newWordTranslation) {
+            if (fire.addNewWord(vm.newWord, vm.newWordTranslation)){
+                vm.newWord = null;
+                vm.newWordTranslation = null;
+            }
+        }
+    };
+
+    fire.getAllWords().then(function(_d) {
+        vm.wordsList = _d;
+    });
 }
 angular.module('further.Words', [])
     .controller('WordsCtrl', WordsCtrl);
@@ -36,12 +67,14 @@ function WordsCtrl(fire, $rootScope, AuthFactory) {
     var vm = this;
     vm.auth = AuthFactory;
     vm.newWord = null;
+    vm.newWordTranslation = null;
     vm.wordsList = [];
     
     vm.addNewWord = function() {
-        if (vm.newWord) {
-            if (fire.addNewWord(vm.newWord)){
+        if (vm.newWord && vm.newWordTranslation) {
+            if (fire.addNewWord(vm.newWord, vm.newWordTranslation)){
                 vm.newWord = null;
+                vm.newWordTranslation = null;
             }
         }
     };
@@ -118,28 +151,36 @@ function fire($log, $firebaseObject, $firebaseArray, $rootScope, AuthFactory) {
     vm.auth = AuthFactory;
 
     var ref = firebase.database().ref();
-
-    // words
     var uid = vm.auth.authVar.$getAuth().uid;
+
+    // WORDS
     var wordsRef = ref.child(uid + '/words');
     var allWords = $firebaseArray(wordsRef);
 
     vm.getAllWords = function(cb) {
         return allWords.$loaded(cb);
     };
-    vm.addNewWord = function(ex) {
+    vm.addNewWord = function(word, translation) {
         var duplicate = false;
         angular.forEach(allWords, function(value, key) {
-            if (value.$value == ex) {
+            if (value.word == word) {
                 duplicate = true;
                 return;
             }
         });
 
         if (!duplicate) {
-            return allWords.$add(ex);
+            var obj = {
+                word: word,
+                translation: translation
+            };
+
+            return allWords.$add(obj);
         }
 
         return false;
     };
+
+    // NOTES
+    
 }
