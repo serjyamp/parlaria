@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="further">
+<html ng-app="further" ng-cloak>
 
 </html>
 
@@ -23,14 +23,10 @@
 
 <body layout="column" layout-fill>
 	<div ng-include="'app/layout/navbar.html'"></div>
-	<main class="md-padding" layout="row" flex>
-		<div ui-view></div>
-	</main>
-	<footer>
-		<div layout="row" layout-align="center center">
-			<div class="container">©
-				<a class="footer_link" href="https://www.linkedin.com/in/serjyamp" target="_blank">Serhii Yampolskyi</a>, 2017. All rights reserved.</div>
-		</div>
+	<div ui-view layout="row" flex></div>
+	<footer layout="row" layout-align="center center">
+		<div class="container">©
+			<a class="footer_link" href="https://www.linkedin.com/in/serjyamp" target="_blank">Serhii Yampolskyi</a>, 2017. All rights reserved.</div>
 	</footer>
 	<script src="vendor/jquery/jquery.min.js"></script>
 	<script src="vendor/angular/angular.concat.js"></script>

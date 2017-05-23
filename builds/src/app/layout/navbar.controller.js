@@ -1,9 +1,13 @@
 angular.module('further.Navbar', [])
     .controller('NavbarCtrl', NavbarCtrl);
 
-function NavbarCtrl($rootScope, $state, $mdDialog, AuthFactory) {
+function NavbarCtrl($rootScope, $state, $mdDialog, AuthFactory, $location) {
     var vm = this;
     vm.auth = AuthFactory;
+
+    vm.getTabName = function(){
+        return $location.hash().replace(/(^#\/|\/$)/g, '');
+    }
 
     vm.auth.authVar.$onAuthStateChanged(function(firebaseUser) {
         $rootScope.firebaseUser = firebaseUser;
@@ -26,30 +30,30 @@ function NavbarCtrl($rootScope, $state, $mdDialog, AuthFactory) {
     var originatorEv;
 
     this.openMenu = function($mdMenu, ev) {
-      originatorEv = ev;
-      $mdMenu.open(ev);
+        originatorEv = ev;
+        $mdMenu.open(ev);
     };
 
     this.notificationsEnabled = true;
     this.toggleNotifications = function() {
-      this.notificationsEnabled = !this.notificationsEnabled;
+        this.notificationsEnabled = !this.notificationsEnabled;
     };
 
     this.redial = function() {
-      $mdDialog.show(
-        $mdDialog.alert()
-          .targetEvent(originatorEv)
-          .clickOutsideToClose(true)
-          .parent('body')
-          .title('Suddenly, a redial')
-          .textContent('You just called a friend; who told you the most amazing story. Have a cookie!')
-          .ok('That was easy')
-      );
+        $mdDialog.show(
+            $mdDialog.alert()
+            .targetEvent(originatorEv)
+            .clickOutsideToClose(true)
+            .parent('body')
+            .title('Suddenly, a redial')
+            .textContent('You just called a friend; who told you the most amazing story. Have a cookie!')
+            .ok('That was easy')
+        );
 
-      originatorEv = null;
+        originatorEv = null;
     };
 
     this.checkVoicemail = function() {
-      // This never happens.
+        // This never happens.
     };
 }

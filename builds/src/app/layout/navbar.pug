@@ -27,21 +27,29 @@
 //-               a(ng-click="vm.signOut()").navbar_link Sign out
 
 div(ng-controller="NavbarCtrl as vm")
-    md-toolbar(layout="row" layout-align='center start' )
+    md-toolbar(layout="row" layout-align='center start')
         .layout-max-width(layout='row', flex='')
             div(flex="20" layout="column")
                 a.logo(ui-sref="/") Parlaria
-            div(flex="auto" layout="column")
-                md-nav-bar(md-selected-nav-item='currentNavItem', nav-bar-aria-label='navigation links' layout="row" layout-align='center start')
-                    md-nav-item(md-nav-sref='words', name='words') Words
-                    md-nav-item(md-nav-sref='notes', name='notes') Notes
+            div(flex="auto" layout="column" layout-align='center')
+                md-nav-bar(nav-bar-aria-label='navigation links' layout="row" layout-align='center start' ng-if="$root.firebaseUser")
+                    md-nav-item(md-nav-sref='words' name='words') Words
+                    md-nav-item(md-nav-sref='notes' name='notes') Notes
             div(flex="20" layout="column" layout-align='center end')
-                md-menu
-                    md-button.md-icon-button(aria-label='Menu', ng-click='vm.openMenu($mdMenu, $event)')
-                        | MENU
-                        md-icon(md-menu-origin='', md-svg-icon='call:phone')
-                    md-menu-content(width='4')
-                        md-menu-item
-                            md-button(ng-click='vm.redial($event)')
-                                md-icon(md-svg-icon='call:dialpad', md-menu-align-target='')
-                                | Redial
+                md-button(ng-if="!$root.firebaseUser" ng-click="vm.signIn()") Sign in
+                md-menu(ng-if="$root.firebaseUser")
+                    md-button.md-fab.md-mini(aria-label='Menu', ng-click='vm.openMenu($mdMenu, $event)')
+                        i.fa.fa-ellipsis-h
+                    md-menu-content(width='3')
+                        md-menu-item(ng-if="$root.firebaseUser")
+                            md-button(ng-click="vm.signOut()")
+                                i.fa.fa-bar-chart
+                                |  My stats
+                        md-menu-item(ng-if="$root.firebaseUser")
+                            md-button(ng-click="vm.signOut()")
+                                i.fa.fa-cogs
+                                |  Settings
+                        md-menu-item(ng-if="$root.firebaseUser")
+                            md-button(ng-click="vm.signOut()")
+                                i.fa.fa-sign-out
+                                |  Sign out

@@ -4,22 +4,30 @@
 			<div flex="20" layout="column">
 				<a class="logo" ui-sref="/">Parlaria</a>
 			</div>
-			<div flex="auto" layout="column">
-				<md-nav-bar md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links" layout="row" layout-align="center start">
+			<div flex="auto" layout="column" layout-align="center">
+				<md-nav-bar nav-bar-aria-label="navigation links" layout="row" layout-align="center start" ng-if="$root.firebaseUser">
 					<md-nav-item md-nav-sref="words" name="words">Words</md-nav-item>
 					<md-nav-item md-nav-sref="notes" name="notes">Notes</md-nav-item>
 				</md-nav-bar>
 			</div>
 			<div flex="20" layout="column" layout-align="center end">
-				<md-menu>
-					<md-button class="md-icon-button" aria-label="Menu" ng-click="vm.openMenu($mdMenu, $event)">MENU
-						<md-icon md-menu-origin="" md-svg-icon="call:phone"></md-icon>
+				<md-button ng-if="!$root.firebaseUser" ng-click="vm.signIn()">Sign in</md-button>
+				<md-menu ng-if="$root.firebaseUser">
+					<md-button class="md-fab md-mini" aria-label="Menu" ng-click="vm.openMenu($mdMenu, $event)">
+						<i class="fa fa-ellipsis-h"></i>
 					</md-button>
-					<md-menu-content width="4">
-						<md-menu-item>
-							<md-button ng-click="vm.redial($event)">
-								<md-icon md-svg-icon="call:dialpad" md-menu-align-target=""></md-icon>Redial
-							</md-button>
+					<md-menu-content width="3">
+						<md-menu-item ng-if="$root.firebaseUser">
+							<md-button ng-click="vm.signOut()">
+								<i class="fa fa-bar-chart"></i> My stats</md-button>
+						</md-menu-item>
+						<md-menu-item ng-if="$root.firebaseUser">
+							<md-button ng-click="vm.signOut()">
+								<i class="fa fa-cogs"></i> Settings</md-button>
+						</md-menu-item>
+						<md-menu-item ng-if="$root.firebaseUser">
+							<md-button ng-click="vm.signOut()">
+								<i class="fa fa-sign-out"></i> Sign out</md-button>
 						</md-menu-item>
 					</md-menu-content>
 				</md-menu>

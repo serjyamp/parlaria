@@ -13,11 +13,12 @@ angular
 function config($stateProvider, $urlRouterProvider, $locationProvider, $mdIconProvider, $mdThemingProvider) {
     // $locationProvider.html5Mode(true);
     $mdThemingProvider.theme('default')
-        .primaryPalette('grey')
-        .accentPalette('orange');
-    $mdIconProvider
-      .iconSet('social', 'img/icons/sets/social-icons.svg', 24)
-      .defaultIconSet('img/icons/sets/core-icons.svg', 24);
+        .primaryPalette('blue-grey')
+        .accentPalette('orange')
+        .warnPalette('red')
+        .backgroundPalette('grey');
+    // .primaryPalette('blue-grey')
+    // .accentPalette('blue')
 
     $urlRouterProvider.otherwise('/words');
 

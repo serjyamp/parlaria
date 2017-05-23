@@ -23,6 +23,12 @@ gulp.task('js', function() {
         .pipe(connect.reload());
 });
 
+gulp.task('fonts', function() {
+    gulp.src('builds/src/fonts/**/*.*')
+        .pipe(gulp.dest('builds/dest/fonts/'))
+        .pipe(connect.reload());
+});
+
 gulp.task('pug', function() {
     gulp.src('builds/src/**/*.pug')
         .pipe(pug({
@@ -104,6 +110,7 @@ gulp.task('connect', function() {
 
 gulp.task('default', [
     'vendor',
+    'fonts',
     'pug',
     'img',
     'js',

@@ -1,5 +1,5 @@
 doctype html
-html(ng-app="further")
+html(ng-app="further" ng-cloak)
 head
 	meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
 	title Parlaria
@@ -22,14 +22,12 @@ head
 	link(rel="stylesheet", href="css/styles.min.css")
 body(layout="column" layout-fill)
 	div(ng-include="'app/layout/navbar.html'")
-	main(class='md-padding' layout="row" flex)
-		div(ui-view)
-	footer
-		div(layout="row" layout-align="center center")
-			.container
-				| © 
-				a.footer_link(href="https://www.linkedin.com/in/serjyamp" target="_blank") Serhii Yampolskyi
-				| , 2017. All rights reserved.
+	div(ui-view layout="row" flex)
+	footer(layout="row" layout-align="center center")
+		.container
+			| © 
+			a.footer_link(href="https://www.linkedin.com/in/serjyamp" target="_blank") Serhii Yampolskyi
+			| , 2017. All rights reserved.
 
 
 	//- vendor files
