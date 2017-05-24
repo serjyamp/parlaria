@@ -1,55 +1,32 @@
-//- .navbar.navbar-inverse(ng-controller="NavbarCtrl as vm")
-//-   .container
-//-     .navbar-header
-//-       button.navbar-toggle(type='button' data-toggle='collapse' data-target='.navbar-inverse-collapse')
-//-         span.icon-bar
-//-         span.icon-bar
-//-         span.icon-bar
-//-       a.navbar-brand(ui-sref='/') Parlaria
-//-     .navbar-collapse.collapse.navbar-inverse-collapse
-//-       ul.nav.navbar-nav
-//-         li(ui-sref-active="active" ng-if="$root.firebaseUser")
-//-           a(ui-sref='words' href="") words
-//-         li(ui-sref-active="active" ng-if="$root.firebaseUser")
-//-           a(ui-sref='notes' href="") notes
-//-       ul.nav.navbar-nav.navbar-right
-//-         li.dropdown
-//-           a.dropdown-toggle(data-target='#' data-toggle='dropdown' ng-class="{signed : $root.firebaseUser}")
-//-             span(ng-show="!$root.firebaseUser")
-//-               | Login 
-//-               b.caret
-//-             span.userimg(ng-show="$root.firebaseUser")
-//-               img(ng-src="{{$root.firebaseUser.photoURL}}")
-//-           ul.dropdown-menu
-//-             li(ng-if="!$root.firebaseUser")
-//-               a(ng-click="vm.signIn()").navbar_link Google
-//-             li(ng-if="$root.firebaseUser")
-//-               a(ng-click="vm.signOut()").navbar_link Sign out
-
-div(ng-controller="NavbarCtrl as vm")
-    md-toolbar(layout="row" layout-align='center start')
-        .layout-max-width(layout='row', flex='')
-            div(flex="20" layout="column")
-                a.logo(ui-sref="/") Parlaria
-            div(flex="auto" layout="column" layout-align='center')
-                md-nav-bar(nav-bar-aria-label='navigation links' layout="row" layout-align='center start' ng-if="$root.firebaseUser")
-                    md-nav-item(md-nav-sref='words' name='words') Words
-                    md-nav-item(md-nav-sref='notes' name='notes') Notes
-            div(flex="20" layout="column" layout-align='center end')
-                md-button(ng-if="!$root.firebaseUser" ng-click="vm.signIn()") Sign in
-                md-menu(ng-if="$root.firebaseUser")
-                    md-button.md-fab.md-mini(aria-label='Menu', ng-click='vm.openMenu($mdMenu, $event)')
-                        i.fa.fa-ellipsis-h
-                    md-menu-content(width='3')
-                        md-menu-item(ng-if="$root.firebaseUser")
-                            md-button(ng-click="vm.signOut()")
-                                i.fa.fa-bar-chart
-                                |  My stats
-                        md-menu-item(ng-if="$root.firebaseUser")
-                            md-button(ng-click="vm.signOut()")
-                                i.fa.fa-cogs
-                                |  Settings
-                        md-menu-item(ng-if="$root.firebaseUser")
-                            md-button(ng-click="vm.signOut()")
-                                i.fa.fa-sign-out
-                                |  Sign out
+.navbar.navbar-inverse.navbar-fixed-top(ng-controller="NavbarCtrl as vm")
+    .container
+        .navbar-header
+            button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-inverse-collapse')
+                span.icon-bar
+                span.icon-bar
+                span.icon-bar
+            a.navbar-brand(ui-sref='/') Parlaria
+        .navbar-collapse.collapse.navbar-inverse-collapse
+            ul.nav.navbar-nav(ng-if="$root.firebaseUser")
+                li(ui-sref-active="active").active
+                    a(ui-sref='words' href="") words
+                li(ui-sref-active="active")
+                    a(ui-sref='notes' href="") notes
+            ul.nav.navbar-nav.navbar-right(ng-if="!$root.firebaseUser")
+                li
+                    a(href='javascript:void(0)' ng-click="vm.signIn()")
+                        i.fa.fa-sign-in
+                        |  Login
+            ul.nav.navbar-nav.navbar-right(ng-if="$root.firebaseUser")
+                li
+                    a(href='javascript:void(0)' ng-click="vm.signOut()")
+                        i.fa.fa-bar-chart
+                        |  My stats
+                li
+                    a(href='javascript:void(0)' ng-click="vm.signOut()")
+                        i.fa.fa-cogs
+                        |  Settings
+                li
+                    a(href='javascript:void(0)' ng-click="vm.signOut()")
+                        i.fa.fa-sign-out
+                        |  Sign out

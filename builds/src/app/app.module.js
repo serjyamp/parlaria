@@ -1,6 +1,7 @@
+$.material.init();
+
 angular
     .module('further', [
-        'ngMaterial',
         'ui.router',
         'further.Navbar',
         'further.Words',
@@ -10,16 +11,9 @@ angular
     ])
     .config(config);
 
-function config($stateProvider, $urlRouterProvider, $locationProvider, $mdIconProvider, $mdThemingProvider) {
+function config($stateProvider, $urlRouterProvider, $locationProvider) {
     // $locationProvider.html5Mode(true);
-    $mdThemingProvider.theme('default')
-        .primaryPalette('blue-grey')
-        .accentPalette('orange')
-        .warnPalette('red')
-        .backgroundPalette('grey');
-    // .primaryPalette('blue-grey')
-    // .accentPalette('blue')
-
+    
     $urlRouterProvider.otherwise('/words');
 
     $stateProvider

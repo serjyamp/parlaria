@@ -82,13 +82,11 @@ gulp.task('vendor', function() {
 
     gulp.src(bc + 'bootstrap-material-design/dist/css/bootstrap-material-design.min.css')
         .pipe(gulp.dest('./builds/dest/vendor/bootstrap-material-design/'));
+    gulp.src(bc + 'bootstrap-material-design/dist/js/material.min.js')
+        .pipe(gulp.dest('./builds/dest/vendor/bootstrap-material-design/'));
 
     gulp.src([
             bc + 'angular/angular.js',
-            bc + 'angular-animate/angular-animate.min.js',
-            bc + 'angular-aria/angular-aria.min.js',
-            bc + 'angular-messages/angular-messages.min.js',
-            bc + 'angular-material/angular-material.min.js',
             bc + 'angular-ui-router/release/angular-ui-router.js',
             bc + 'firebase/firebase.js',
             bc + 'angularfire/dist/angularfire.min.js'

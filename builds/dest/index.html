@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="further" ng-cloak>
+<html>
 
 </html>
 
@@ -7,28 +7,24 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<title>Parlaria</title>
 	<base href="/">
-	<link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png">
-	<link rel="icon" type="image/png" href="img/favicon-32x32.png" sizes="32x32">
-	<link rel="icon" type="image/png" href="img/favicon-16x16.png" sizes="16x16">
-	<link rel="manifest" href="img/manifest.json">
-	<link rel="mask-icon" href="img/safari-pinned-tab.svg" color="#b2051b">
-	<link rel="shortcut icon" href="img/favicon.ico">
-	<meta name="msapplication-config" content="img/browserconfig.xml">
-	<meta name="theme-color" content="#ffffff">
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="vendor/bootstrap-material-design/bootstrap-material-design.min.css">
 	<link rel="stylesheet" href="vendor/fa/css/font-awesome.min.css">
-	<link rel="stylesheet" href="vendor/angular/angular-material.min.css">
 	<link rel="stylesheet" href="css/styles.min.css">
 </head>
 
-<body layout="column" layout-fill>
-	<div ng-include="'app/layout/navbar.html'"></div>
-	<div ui-view layout="row" flex></div>
-	<footer layout="row" layout-align="center center">
+<body ng-cloak ng-app="further">
+	<main>
+		<div ng-include="'app/layout/navbar.html'"></div>
+		<div ui-view></div>
+	</main>
+	<footer>
 		<div class="container">©
 			<a class="footer_link" href="https://www.linkedin.com/in/serjyamp" target="_blank">Serhii Yampolskyi</a>, 2017. All rights reserved.</div>
 	</footer>
 	<script src="vendor/jquery/jquery.min.js"></script>
+	<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+	<script src="vendor/bootstrap-material-design/material.min.js"></script>
 	<script src="vendor/angular/angular.concat.js"></script>
 	<script src="app/app.js"></script>
 </body>
