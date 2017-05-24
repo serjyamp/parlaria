@@ -3,8 +3,11 @@ $.material.init();
 angular
     .module('further', [
         'ui.router',
+        // 'textAngular',
+        'wysiwyg.module',
         'further.Navbar',
         'further.Words',
+        'further.Essay',
         'further.Notes',
         'further.fire.service',
         'further.auth.factory'
@@ -25,6 +28,12 @@ function config($stateProvider, $urlRouterProvider, $locationProvider) {
             url: '/words',
             templateUrl: 'app/components/words.html',
             controller: 'WordsCtrl',
+            controllerAs: 'vm'
+        })
+        .state('essay', {
+            url: '/essay',
+            templateUrl: 'app/components/essay.html',
+            controller: 'EssayCtrl',
             controllerAs: 'vm'
         })
         .state('notes', {

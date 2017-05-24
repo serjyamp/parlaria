@@ -1,15 +1,19 @@
 
-NavbarCtrl.$inject = ["$rootScope", "$state", "AuthFactory", "$location"];
+EssayCtrl.$inject = ["fire", "$rootScope", "AuthFactory"];
 NotesCtrl.$inject = ["fire", "$rootScope", "AuthFactory"];
 WordsCtrl.$inject = ["fire", "$rootScope", "AuthFactory"];
+NavbarCtrl.$inject = ["$rootScope", "$state", "AuthFactory", "$location"];
 AuthFactory.$inject = ["$firebaseAuth"];
 fire.$inject = ["$log", "$firebaseObject", "$firebaseArray", "$rootScope", "AuthFactory"];$.material.init();
 
 angular
     .module('further', [
         'ui.router',
+        // 'textAngular',
+        'wysiwyg.module',
         'further.Navbar',
         'further.Words',
+        'further.Essay',
         'further.Notes',
         'further.fire.service',
         'further.auth.factory'
@@ -32,6 +36,12 @@ function config($stateProvider, $urlRouterProvider, $locationProvider) {
             controller: 'WordsCtrl',
             controllerAs: 'vm'
         })
+        .state('essay', {
+            url: '/essay',
+            templateUrl: 'app/components/essay.html',
+            controller: 'EssayCtrl',
+            controllerAs: 'vm'
+        })
         .state('notes', {
             url: '/notes',
             templateUrl: 'app/components/notes.html',
@@ -40,35 +50,29 @@ function config($stateProvider, $urlRouterProvider, $locationProvider) {
         });
 }
 
-angular.module('further.Navbar', [])
-    .controller('NavbarCtrl', NavbarCtrl);
+angular.module('further.Essay', [])
+    .controller('EssayCtrl', EssayCtrl);
 
-function NavbarCtrl($rootScope, $state, AuthFactory, $location) {
+function EssayCtrl(fire, $rootScope, AuthFactory) {
     var vm = this;
     vm.auth = AuthFactory;
-
-    vm.getTabName = function(){
-        return $location.hash().replace(/(^#\/|\/$)/g, '');
-    }
-
-    vm.auth.authVar.$onAuthStateChanged(function(firebaseUser) {
-        $rootScope.firebaseUser = firebaseUser;
-        if ($rootScope.firebaseUser) {
-            $state.go('words');
+    vm.newWord = null;
+    vm.newWordTranslation = null;
+    vm.wordsList = [];
+    
+    vm.addNewWord = function() {
+        if (vm.newWord && vm.newWordTranslation) {
+            if (fire.addNewWord(vm.newWord, vm.newWordTranslation)){
+                vm.newWord = null;
+                vm.newWordTranslation = null;
+            }
         }
+    };
+
+    fire.getAllWords().then(function(_d) {
+        vm.wordsList = _d;
     });
-
-    vm.signOut = function() {
-        vm.auth.signOut();
-        $state.go('/');
-    };
-    vm.signIn = function() {
-        vm.auth.signIn();
-    };
-
-    vm.photoURL = null;
 }
-
 angular.module('further.Notes', [])
     .controller('NotesCtrl', NotesCtrl);
 
@@ -115,6 +119,35 @@ function WordsCtrl(fire, $rootScope, AuthFactory) {
         vm.wordsList = _d;
     });
 }
+angular.module('further.Navbar', [])
+    .controller('NavbarCtrl', NavbarCtrl);
+
+function NavbarCtrl($rootScope, $state, AuthFactory, $location) {
+    var vm = this;
+    vm.auth = AuthFactory;
+
+    vm.getTabName = function(){
+        return $location.hash().replace(/(^#\/|\/$)/g, '');
+    }
+
+    vm.auth.authVar.$onAuthStateChanged(function(firebaseUser) {
+        $rootScope.firebaseUser = firebaseUser;
+        if ($rootScope.firebaseUser) {
+            $state.go('words');
+        }
+    });
+
+    vm.signOut = function() {
+        vm.auth.signOut();
+        $state.go('/');
+    };
+    vm.signIn = function() {
+        vm.auth.signIn();
+    };
+
+    vm.photoURL = null;
+}
+
 angular
     .module("further.auth.factory", ["firebase"])
     .factory("AuthFactory", AuthFactory);

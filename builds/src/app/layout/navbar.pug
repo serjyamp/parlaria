@@ -8,8 +8,10 @@
             a.navbar-brand(ui-sref='/') Parlaria
         .navbar-collapse.collapse.navbar-inverse-collapse
             ul.nav.navbar-nav(ng-if="$root.firebaseUser")
-                li(ui-sref-active="active").active
+                li(ui-sref-active="active")
                     a(ui-sref='words' href="") words
+                li(ui-sref-active="active")
+                    a(ui-sref='essay' href="") essay
                 li(ui-sref-active="active")
                     a(ui-sref='notes' href="") notes
             ul.nav.navbar-nav.navbar-right(ng-if="!$root.firebaseUser")

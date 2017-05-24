@@ -10,6 +10,7 @@
     "components-font-awesome": "4.7.0",
     "jquery": "2.2.4",
     "angular": "^1.6.4",
-    "bootstrap-material-design": "0.5.10"
+    "bootstrap-material-design": "0.5.10",
+    "angular-wysiwyg": "^1.2.4"
   }
 }

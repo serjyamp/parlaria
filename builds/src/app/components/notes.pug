@@ -1,24 +1,28 @@
-main
-	.container
-		.panel.panel-default
-			.panel-heading
-				| NOTEEEEEEEEEEEEEEES
+.panel
+	form(ng-submit="vm.addNewWord()")
+		.panel-body
+			.row
+				.col-sm-12.col-xs-12.add_item_block
+					.form-group
+						input.form-control(type="text" ng-model="vm.newWord" placeholder="Caption" required)
+			.row
+				.col-sm-12.col-xs-12.add_item_block
+					.form-group
+						textarea.form-control(type="text" ng-model="vm.newWordTranslation" placeholder="Description" required)
+		.panel-footer
+			.row
+				.col-sm-12.col-xs-12.text-right.add_item_plus
+					button.btn.btn-raised.btn-warning(type="submit")
+						| Add note
+.panel
+	.panel-body
+		.list-group
+			.list-group-item(ng-repeat="word in vm.wordsList")
 				.row
-					form(ng-submit="vm.addNewWord()")
-						.col-sm-5.col-xs-5.add_item_block
-							input.form-control.ex_input(type="text" ng-model="vm.newWord" placeholder="Word")
-						.col-sm-5.col-xs-5.add_item_block
-							input.form-control.ex_input(type="text" ng-model="vm.newWordTranslation" placeholder="Translation")
-						.col-sm-2.col-xs-2.text-right.add_item_plus
-							button.btn.btn-raised.btn-success.simple_btn(type="submit")
-								i.fa.fa-plus-circle(aria-hidden="true")
-			.panel-body
-				ul.words_list
-					li.words_item(ng-repeat="word in vm.wordsList")
-						.col-sm-5.col-xs-5
-							input.form-control(type="text" ng-model="word.word" ng-change="vm.wordsList.$save(word)")
-						.col-sm-5.col-xs-5
-							input.form-control(type="text" ng-model="word.translation" ng-change="vm.wordsList.$save(word)")
-						.col-sm-2.col-xs-2.text-right
-							button.btn.btn-raised.btn-danger.simple_btn(ng-click="vm.wordsList.$remove(word)")
-								i.fa.fa-times-circle-o(aria-hidden="true")
+					.col-sm-12.col-xs-12.add_item_block
+						.form-group
+							input.form-control(type="text" ng-model="vm.newWord" placeholder="Caption")
+				.row
+					.col-sm-12.col-xs-12.add_item_block
+						.form-group
+							textarea.form-control(type="text" ng-model="vm.newWordTranslation" placeholder="Description")

@@ -94,8 +94,15 @@ gulp.task('vendor', function() {
         .pipe(concat('angular.concat.js'))
         .pipe(gulp.dest('./builds/dest/vendor/angular/'));
 
-    gulp.src(bc + 'angular-material/angular-material.min.css')
-        .pipe(gulp.dest('./builds/dest/vendor/angular/'));
+    gulp.src(bc + 'angular-bootstrap-colorpicker/css/colorpicker.min.css')
+        .pipe(gulp.dest('./builds/dest/vendor/angular-bootstrap-colorpicker/css'));
+    gulp.src(bc + 'angular-bootstrap-colorpicker/img/*.*')
+        .pipe(gulp.dest('./builds/dest/vendor/angular-bootstrap-colorpicker/img'));
+    gulp.src(bc + 'angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.min.js')
+        .pipe(gulp.dest('./builds/dest/vendor/angular-bootstrap-colorpicker/js'));
+
+    gulp.src(bc + 'angular-wysiwyg/dist/angular-wysiwyg.min.js')
+        .pipe(gulp.dest('./builds/dest/vendor/angular-wysiwyg'));
 });
 
 gulp.task('connect', function() {
