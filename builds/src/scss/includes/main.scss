@@ -300,3 +300,26 @@ main {
 .btn-fab-mini{
     line-height: 0 !important;
 }
+#question{
+    border: 1px solid #ccc;
+    background: #FFF;
+}
+.wysiwyg-select{
+    padding: 0;
+}
+[data-original-title="Image"]{
+    display: none !important;
+}
+.new-essay-control{
+    margin-bottom: 20px;
+}
+.essay-msg{
+    color: red;
+    margin-right: 15px;
+    font-size: 18px;
+    line-height: 18px;
+    margin-top: 20px;
+    display: inline-block;
+    vertical-align: top;
+    font-weight: 400;
+}

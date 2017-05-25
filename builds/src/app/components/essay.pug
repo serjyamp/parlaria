@@ -1,4 +1,19 @@
-//- <div text-angular ng-model="htmlVariable"></div>
-.panel
-	.panel-body
-		<wysiwyg textarea-id="question" textarea-class="form-control" textarea-height="300px" textarea-name="textareaQuestion" textarea-required ng-model="yourModel.model" enable-bootstrap-title="true" textarea-menu="yourModel.customMenu"></wysiwyg>
+.row.text-right.new-essay-control
+	button.btn.btn-raised.btn-warning(ng-click="vm.showNewEssayForm = true") New essay
+.new-essay(ng-show="vm.showNewEssayForm")
+	form(ng-submit="vm.addNewEssay()")
+		.panel
+			.panel-body
+				.row
+					.form-group
+						input.form-control(type="text" placeholder="Name of essay" ng-model="vm.essayName" ng-change="vm.essayErrorMsg = false" required)
+		.panel
+			.panel-body
+				wysiwyg(textarea-id='question', textarea-class='form-control', textarea-height='300px', textarea-name='textareaQuestion', textarea-required='required', ng-model="vm.essayText", enable-bootstrap-title='true' ng-change="vm.essayErrorMsg = false")
+			.panel-footer
+				.row.text-right
+					span.essay-msg(ng-show="vm.essayErrorMsg") Essay hasn't been saved. Check it and try again.
+					button.btn.btn-raised.btn-default(type="button" ng-click="vm.cancelNewEssay()")
+						| Cancel
+					button.btn.btn-raised.btn-warning(type="submit")
+						| Add

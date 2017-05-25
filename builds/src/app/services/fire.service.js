@@ -48,6 +48,18 @@ function fire($log, $firebaseObject, $firebaseArray, $rootScope, AuthFactory) {
         return false;
     };
 
+    // ESSAY
+    var essayRef = ref.child(uid + '/essay');
+    var allEssays = $firebaseArray(essayRef);
+    vm.addNewEssay = function(essayName, essayText) {
+        var obj = {
+            essayName: essayName,
+            essayText: essayText
+        };
+
+        return allEssays.$add(obj);
+    };
+
     // NOTES
     
 }

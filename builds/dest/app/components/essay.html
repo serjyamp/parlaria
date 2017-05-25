@@ -1,5 +1,28 @@
-<div class="panel">
-	<div class="panel-body">
-		<wysiwyg textarea-id="question" textarea-class="form-control" textarea-height="300px" textarea-name="textareaQuestion" textarea-required ng-model="yourModel.model" enable-bootstrap-title="true" textarea-menu="yourModel.customMenu"></wysiwyg>
-	</div>
+<div class="row text-right new-essay-control">
+	<button class="btn btn-raised btn-warning" ng-click="vm.showNewEssayForm = true">New essay</button>
+</div>
+<div class="new-essay" ng-show="vm.showNewEssayForm">
+	<form ng-submit="vm.addNewEssay()">
+		<div class="panel">
+			<div class="panel-body">
+				<div class="row">
+					<div class="form-group">
+						<input class="form-control" type="text" placeholder="Name of essay" ng-model="vm.essayName" ng-change="vm.essayErrorMsg = false" required="required" />
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel">
+			<div class="panel-body">
+				<wysiwyg textarea-id="question" textarea-class="form-control" textarea-height="300px" textarea-name="textareaQuestion" textarea-required="required" ng-model="vm.essayText" enable-bootstrap-title="true" ng-change="vm.essayErrorMsg = false"></wysiwyg>
+			</div>
+			<div class="panel-footer">
+				<div class="row text-right">
+					<span class="essay-msg" ng-show="vm.essayErrorMsg">Essay hasn't been saved. Check it and try again.</span>
+					<button class="btn btn-raised btn-default" type="button" ng-click="vm.cancelNewEssay()">Cancel</button>
+					<button class="btn btn-raised btn-warning" type="submit">Add</button>
+				</div>
+			</div>
+		</div>
+	</form>
 </div>

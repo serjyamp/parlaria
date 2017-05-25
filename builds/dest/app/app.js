@@ -23,7 +23,7 @@ angular
 function config($stateProvider, $urlRouterProvider, $locationProvider) {
     // $locationProvider.html5Mode(true);
     
-    $urlRouterProvider.otherwise('/words');
+    $urlRouterProvider.otherwise('/');
 
     $stateProvider
         .state('/', {
@@ -55,23 +55,32 @@ angular.module('further.Essay', [])
 
 function EssayCtrl(fire, $rootScope, AuthFactory) {
     var vm = this;
-    vm.auth = AuthFactory;
-    vm.newWord = null;
-    vm.newWordTranslation = null;
-    vm.wordsList = [];
+
+    vm.showNewEssayForm = false;
+    vm.essayName = '';
+    vm.essayText = '';
+    vm.essayErrorMsg = false;
+
+    vm.cancelNewEssay = function(){
+        vm.essayName = '';
+        vm.essayText = '';
+        vm.showNewEssayForm = false;
+        vm.essayErrorMsg = false;
+    }
     
-    vm.addNewWord = function() {
-        if (vm.newWord && vm.newWordTranslation) {
-            if (fire.addNewWord(vm.newWord, vm.newWordTranslation)){
-                vm.newWord = null;
-                vm.newWordTranslation = null;
+    vm.addNewEssay = function() {
+        if (vm.essayName && vm.essayText) {
+            if (fire.addNewEssay(vm.essayName, vm.essayText)){
+                vm.cancelNewEssay();
+            } else{
+                vm.essayErrorMsg = true;
             }
         }
     };
 
-    fire.getAllWords().then(function(_d) {
-        vm.wordsList = _d;
-    });
+    // fire.getAllWords().then(function(_d) {
+    //     vm.wordsList = _d;
+    // });
 }
 angular.module('further.Notes', [])
     .controller('NotesCtrl', NotesCtrl);
@@ -220,6 +229,18 @@ function fire($log, $firebaseObject, $firebaseArray, $rootScope, AuthFactory) {
         }
 
         return false;
+    };
+
+    // ESSAY
+    var essayRef = ref.child(uid + '/essay');
+    var allEssays = $firebaseArray(essayRef);
+    vm.addNewEssay = function(essayName, essayText) {
+        var obj = {
+            essayName: essayName,
+            essayText: essayText
+        };
+
+        return allEssays.$add(obj);
     };
 
     // NOTES
