@@ -1,5 +1,5 @@
-.row.text-right.new-essay-control
-	button.btn.btn-raised.btn-warning(ng-click="vm.showNewEssayForm = true") New essay
+.row.new-essay-control(ng-show="vm.essaysList.length")
+	button.btn.btn-raised.btn-success(ng-click="vm.showNewEssayForm = !vm.showNewEssayForm") New essay
 .new-essay(ng-show="vm.showNewEssayForm")
 	form(ng-submit="vm.addNewEssay()")
 		.panel
@@ -12,8 +12,47 @@
 				wysiwyg(textarea-id='question', textarea-class='form-control', textarea-height='300px', textarea-name='textareaQuestion', textarea-required='required', ng-model="vm.essayText", enable-bootstrap-title='true' ng-change="vm.essayErrorMsg = false")
 			.panel-footer
 				.row.text-right
-					span.essay-msg(ng-show="vm.essayErrorMsg") Essay hasn't been saved. Check it and try again.
-					button.btn.btn-raised.btn-default(type="button" ng-click="vm.cancelNewEssay()")
-						| Cancel
-					button.btn.btn-raised.btn-warning(type="submit")
-						| Add
+					span.text-danger.essay-msg(ng-show="vm.essayErrorMsg") Essay hasn't been saved. Check it and try again.
+					button.btn.btn-raised.btn-default(type="button" ng-click="vm.cancelNewEssay()" ng-show="vm.essaysList.length")
+						| Clear & Close
+					button.btn.btn-raised.btn-success(type="submit")
+						| Save
+.essays(ng-show="vm.essaysList.length")
+	.essays-list
+		.essays-list__item(ng-repeat="essay in vm.essaysList")
+			.panel
+				.panel-body
+					form(ng-submit="vm.saveCurrentEssay(essay)")
+						.row.essay-header-row
+							.col-sm-10.col-xs-10.no-pad-l
+								.form-group
+									input.form-control(type="text" ng-model="essay.essayName" ng-readonly="!showEssay" ng-change="vm.essaySavedMsg = false; vm.essayCurrentNotSavedMsg = false" required)
+							.col-sm-2.col-xs-2.no-pad-r.text-right
+								button.btn.btn-raised.btn-info(ng-init="showEssay = false" ng-click="showEssay = !showEssay")
+									span(ng-show="!showEssay") Show
+									span(ng-show="showEssay") Hide
+						.row.real-essay-editor(ng-show="showEssay")
+							wysiwyg(textarea-id='realEssayEditor', textarea-class='form-control', textarea-height='300px', textarea-name='textareaQuestion', textarea-required='required', ng-model="essay.essayText", enable-bootstrap-title='true' ng-change="vm.essaySavedMsg = false, vm.essayCurrentNotSavedMsg = false")
+							.row.text-right
+								span.text-success.essay-msg(ng-show="vm.essayCurrentSavedMsg") Saved.
+								span.text-danger.essay-msg(ng-show="vm.essayCurrentNotSavedMsg") Essay hasn't been saved. Check it and try again.
+								button.btn.btn-raised(ng-click="vm.deleteEssay(essay)") Delete essay
+								button.btn.btn-raised.btn-success(type="submit") Save
+				.panel-footer
+					.row.essay-info-row
+						.col-sm-6.col-xs-6.no-pad-l
+							small.essay-info
+								span
+									| Created: 
+									strong.essay-info-value 4
+								span
+									| Edited: 
+									strong.essay-info-value 5
+						.col-sm-6.col-xs-6.no-pad-r.text-right
+							small.essay-info
+								span
+									| Words: 
+									strong.essay-info-value 15
+								span
+									| Characters: 
+									strong.essay-info-value 155

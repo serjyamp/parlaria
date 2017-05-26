@@ -59,6 +59,9 @@ function fire($log, $firebaseObject, $firebaseArray, $rootScope, AuthFactory) {
 
         return allEssays.$add(obj);
     };
+    vm.getAllEssays = function(cb) {
+        return allEssays.$loaded(cb);
+    };
 
     // NOTES
     

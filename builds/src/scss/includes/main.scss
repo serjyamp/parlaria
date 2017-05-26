@@ -233,14 +233,10 @@ html {
 
 .main-start {
     width: 100%;
-    background: #607D8B;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 footer {
-    background: #607D8B;
+    background: #000;
     color: #fff;
     height: 50px;
     text-align: center;
@@ -265,14 +261,14 @@ footer {
 }
 
 .start__slogan {
-    font-size: 28px;
+    font-size: 46px;
     font-style: italic;
 }
 
 .start__cptn {
     font-family: 'Pacifico', cursive;
-    font-size: 170px;
-    line-height: 170px;
+    font-size: 190px;
+    line-height: 190px;
     margin-bottom: 35px;
 }
 
@@ -296,30 +292,39 @@ main {
     height: auto;
     margin: 0 auto -50px;
     padding: 100px 0;
+    // display: flex;
+    // align-items: center;
+    // justify-content: center;
 }
-.btn-fab-mini{
+
+.btn-fab-mini {
     line-height: 0 !important;
 }
-#question{
+
+#question, #realEssayEditor {
     border: 1px solid #ccc;
     background: #FFF;
 }
-.wysiwyg-select{
+
+.wysiwyg-select {
     padding: 0;
 }
-[data-original-title="Image"]{
+
+[data-original-title="Image"] {
     display: none !important;
 }
-.new-essay-control{
+
+.new-essay-control {
     margin-bottom: 20px;
 }
-.essay-msg{
-    color: red;
+
+.essay-msg {
     margin-right: 15px;
-    font-size: 18px;
-    line-height: 18px;
-    margin-top: 20px;
+    margin-top: 16px;
     display: inline-block;
     vertical-align: top;
-    font-weight: 400;
+}
+.essay-header-row{
+    display: flex;
+    align-items: center;
 }

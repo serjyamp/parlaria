@@ -1,10 +1,10 @@
 
-EssayCtrl.$inject = ["fire", "$rootScope", "AuthFactory"];
-NotesCtrl.$inject = ["fire", "$rootScope", "AuthFactory"];
-WordsCtrl.$inject = ["fire", "$rootScope", "AuthFactory"];
 NavbarCtrl.$inject = ["$rootScope", "$state", "AuthFactory", "$location"];
 AuthFactory.$inject = ["$firebaseAuth"];
-fire.$inject = ["$log", "$firebaseObject", "$firebaseArray", "$rootScope", "AuthFactory"];$.material.init();
+fire.$inject = ["$log", "$firebaseObject", "$firebaseArray", "$rootScope", "AuthFactory"];
+EssayCtrl.$inject = ["fire", "$rootScope", "AuthFactory"];
+NotesCtrl.$inject = ["fire", "$rootScope", "AuthFactory"];
+WordsCtrl.$inject = ["fire", "$rootScope", "AuthFactory"];$.material.init();
 
 angular
     .module('further', [
@@ -50,84 +50,6 @@ function config($stateProvider, $urlRouterProvider, $locationProvider) {
         });
 }
 
-angular.module('further.Essay', [])
-    .controller('EssayCtrl', EssayCtrl);
-
-function EssayCtrl(fire, $rootScope, AuthFactory) {
-    var vm = this;
-
-    vm.showNewEssayForm = false;
-    vm.essayName = '';
-    vm.essayText = '';
-    vm.essayErrorMsg = false;
-
-    vm.cancelNewEssay = function(){
-        vm.essayName = '';
-        vm.essayText = '';
-        vm.showNewEssayForm = false;
-        vm.essayErrorMsg = false;
-    }
-    
-    vm.addNewEssay = function() {
-        if (vm.essayName && vm.essayText) {
-            if (fire.addNewEssay(vm.essayName, vm.essayText)){
-                vm.cancelNewEssay();
-            } else{
-                vm.essayErrorMsg = true;
-            }
-        }
-    };
-
-    // fire.getAllWords().then(function(_d) {
-    //     vm.wordsList = _d;
-    // });
-}
-angular.module('further.Notes', [])
-    .controller('NotesCtrl', NotesCtrl);
-
-function NotesCtrl(fire, $rootScope, AuthFactory) {
-    var vm = this;
-    vm.auth = AuthFactory;
-    vm.newWord = null;
-    vm.newWordTranslation = null;
-    vm.wordsList = [];
-    
-    vm.addNewWord = function() {
-        if (vm.newWord && vm.newWordTranslation) {
-            if (fire.addNewWord(vm.newWord, vm.newWordTranslation)){
-                vm.newWord = null;
-                vm.newWordTranslation = null;
-            }
-        }
-    };
-
-    fire.getAllWords().then(function(_d) {
-        vm.wordsList = _d;
-    });
-}
-angular.module('further.Words', [])
-    .controller('WordsCtrl', WordsCtrl);
-
-function WordsCtrl(fire, $rootScope, AuthFactory) {
-    var vm = this;
-    vm.auth = AuthFactory;
-    vm.newWord = null;
-    vm.newWordTranslation = null;
-    vm.wordsList = [];
-    
-    vm.addNewWord = function() {
-        if (vm.newWord && vm.newWordTranslation) {
-            if (fire.addNewWord(vm.newWord, vm.newWordTranslation)){
-                vm.newWord = null;
-                vm.newWordTranslation = null;
-            }
-        }
-    };
-
-    fire.getAllWords().then(function(_d) {
-        vm.wordsList = _d;
-    });
-}
 angular.module('further.Navbar', [])
     .controller('NavbarCtrl', NavbarCtrl);
 
@@ -242,7 +164,118 @@ function fire($log, $firebaseObject, $firebaseArray, $rootScope, AuthFactory) {
 
         return allEssays.$add(obj);
     };
+    vm.getAllEssays = function(cb) {
+        return allEssays.$loaded(cb);
+    };
 
     // NOTES
     
+}
+
+angular.module('further.Essay', [])
+    .controller('EssayCtrl', EssayCtrl);
+
+function EssayCtrl(fire, $rootScope, AuthFactory) {
+    var vm = this;
+
+    vm.showNewEssayForm = false;
+    vm.essayName = '';
+    vm.essayText = '';
+    vm.essayErrorMsg = false;
+    vm.essayCurrentSavedMsg = false;
+    vm.essaysList = [];
+
+    vm.cancelNewEssay = function(){
+        vm.essayName = '';
+        vm.essayText = '';
+        vm.showNewEssayForm = false;
+        vm.essayErrorMsg = false;
+    }
+    
+    vm.addNewEssay = function() {
+        if (vm.essayName && vm.essayText) {
+            if (fire.addNewEssay(vm.essayName, vm.essayText)){
+                vm.cancelNewEssay();
+            } else{
+                vm.essayErrorMsg = true;
+            }
+        }
+    };
+    
+    vm.saveCurrentEssay = function(essay) {
+        vm.essaysList.$save(essay).then(function(){
+            vm.essayCurrentSavedMsg = true;
+            vm.essayCurrentNotSavedMsg = false;
+        }, function(){
+            vm.essayCurrentSavedMsg = false;
+            vm.essayCurrentNotSavedMsg = true;
+        });
+    };
+    
+    vm.deleteEssay = function(essay) {
+        vm.essaysList.$remove(essay).then(function(){
+            console.log(vm.essaysList.length)
+            if (!vm.essaysList.length){
+                vm.showNewEssayForm = true;
+            }
+        });
+    };
+
+    fire.getAllEssays().then(function(_d) {
+        vm.essaysList = _d;
+
+        if (vm.essaysList.length){
+            vm.showNewEssayForm = false;
+        } else{
+            vm.showNewEssayForm = true;
+        }
+    });
+
+    
+}
+angular.module('further.Notes', [])
+    .controller('NotesCtrl', NotesCtrl);
+
+function NotesCtrl(fire, $rootScope, AuthFactory) {
+    var vm = this;
+    vm.auth = AuthFactory;
+    vm.newWord = null;
+    vm.newWordTranslation = null;
+    vm.wordsList = [];
+    
+    vm.addNewWord = function() {
+        if (vm.newWord && vm.newWordTranslation) {
+            if (fire.addNewWord(vm.newWord, vm.newWordTranslation)){
+                vm.newWord = null;
+                vm.newWordTranslation = null;
+            }
+        }
+    };
+
+    fire.getAllWords().then(function(_d) {
+        vm.wordsList = _d;
+    });
+}
+angular.module('further.Words', [])
+    .controller('WordsCtrl', WordsCtrl);
+
+function WordsCtrl(fire, $rootScope, AuthFactory) {
+    var vm = this;
+    vm.auth = AuthFactory;
+    vm.newWord = null;
+    vm.newWordTranslation = null;
+    vm.wordsList = [];
+    
+    vm.addNewWord = function() {
+        if (vm.newWord && vm.newWordTranslation) {
+            if (fire.addNewWord(vm.newWord, vm.newWordTranslation)){
+                vm.newWord = null;
+                vm.newWordTranslation = null;
+            }
+        }
+    };
+
+    fire.getAllWords().then(function(_d) {
+        vm.wordsList = _d;
+    });
 }
