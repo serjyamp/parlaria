@@ -14,13 +14,25 @@
 		</div>
 		<div class="panel">
 			<div class="panel-body">
-				<wysiwyg textarea-id="question" textarea-class="form-control" textarea-height="300px" textarea-name="textareaQuestion" textarea-required="required" ng-model="vm.essayText" enable-bootstrap-title="true" ng-change="vm.essayErrorMsg = false"></wysiwyg>
+				<wysiwyg textarea-id="question" textarea-class="form-control" textarea-height="250px" textarea-name="textareaQuestion" textarea-required="required" ng-model="vm.essayText" enable-bootstrap-title="true" ng-change="vm.essayErrorMsg = false"></wysiwyg>
 			</div>
 			<div class="panel-footer">
-				<div class="row text-right">
-					<span class="text-danger essay-msg" ng-show="vm.essayErrorMsg">Essay hasn't been saved. Check it and try again.</span>
-					<button class="btn btn-raised btn-default" type="button" ng-click="vm.cancelNewEssay()" ng-show="vm.essaysList.length">Clear & Close</button>
-					<button class="btn btn-raised btn-success" type="submit">Save</button>
+				<div class="row essay-info-row">
+					<div class="col-sm-6 col-xs-6 no-pad-l">
+						<small class="essay-info">
+							<span>Words:
+								<strong class="essay-info-value">{{vm.numberOfWords(vm.essayText)}}</strong>
+							</span>
+							<span>Characters:
+								<strong class="essay-info-value">{{vm.numberOfCharacters(vm.essayText)}}</strong>
+							</span>
+						</small>
+					</div>
+					<div class="col-sm-6 col-xs-6 no-pad-r text-right">
+						<span class="text-danger essay-msg" ng-show="vm.essayErrorMsg">Essay hasn't been saved. Check it and try again.</span>
+						<button class="btn btn-raised btn-default" type="button" ng-click="vm.cancelNewEssay()" ng-show="vm.essaysList.length">Clear & Close</button>
+						<button class="btn btn-raised btn-success" type="submit">Save</button>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -28,53 +40,55 @@
 </div>
 <div class="essays" ng-show="vm.essaysList.length">
 	<div class="essays-list">
-		<div class="essays-list__item" ng-repeat="essay in vm.essaysList">
+		<div class="essays-list__item" ng-repeat="essay in vm.essaysList | orderBy:reverse:true" ng-init="showEssay = false">
 			<div class="panel">
-				<div class="panel-body">
-					<form ng-submit="vm.saveCurrentEssay(essay)">
+				<form ng-submit="vm.saveCurrentEssay(essay)">
+					<div class="panel-body">
 						<div class="row essay-header-row">
 							<div class="col-sm-10 col-xs-10 no-pad-l">
 								<div class="form-group">
-									<input class="form-control" type="text" ng-model="essay.essayName" ng-readonly="!showEssay" ng-change="vm.essaySavedMsg = false; vm.essayCurrentNotSavedMsg = false" required="required" />
+									<input class="form-control" type="text" ng-model="essay.essayName" ng-readonly="!showEssay" required="required" />
 								</div>
 							</div>
 							<div class="col-sm-2 col-xs-2 no-pad-r text-right">
-								<button class="btn btn-raised btn-info" ng-init="showEssay = false" ng-click="showEssay = !showEssay">
+								<button class="btn btn-raised btn-info" ng-click="showEssay = !showEssay">
 									<span ng-show="!showEssay">Show</span>
 									<span ng-show="showEssay">Hide</span>
 								</button>
 							</div>
 						</div>
 						<div class="row real-essay-editor" ng-show="showEssay">
-							<wysiwyg textarea-id="realEssayEditor" textarea-class="form-control" textarea-height="300px" textarea-name="textareaQuestion" textarea-required="required" ng-model="essay.essayText" enable-bootstrap-title="true" ng-change="vm.essaySavedMsg = false, vm.essayCurrentNotSavedMsg = false"></wysiwyg>
-							<div class="row text-right">
-								<span class="text-success essay-msg" ng-show="vm.essayCurrentSavedMsg">Saved.</span>
-								<span class="text-danger essay-msg" ng-show="vm.essayCurrentNotSavedMsg">Essay hasn't been saved. Check it and try again.</span>
-								<button class="btn btn-raised" ng-click="vm.deleteEssay(essay)">Delete essay</button>
-								<button class="btn btn-raised btn-success" type="submit">Save</button>
+							<wysiwyg textarea-id="realEssayEditor" textarea-class="form-control" textarea-height="250px" textarea-name="textareaQuestion" textarea-required="required" ng-model="essay.essayText" enable-bootstrap-title="true"></wysiwyg>
+							<div class="row">
+								<div class="col-sm-6 col-xs-6 no-pad-l">
+									<button class="btn btn-raised" ng-click="vm.deleteEssay(essay)">Delete essay</button>
+								</div>
+								<div class="col-sm-6 col-xs-6 text-right no-pad-r">
+									<button class="btn btn-raised btn-success" type="submit">Save</button>
+								</div>
 							</div>
 						</div>
-					</form>
-				</div>
+					</div>
+				</form>
 				<div class="panel-footer">
 					<div class="row essay-info-row">
 						<div class="col-sm-6 col-xs-6 no-pad-l">
 							<small class="essay-info">
 								<span>Created:
-									<strong class="essay-info-value">4</strong>
+									<strong class="essay-info-value">{{essay.created}}</strong>
 								</span>
-								<span>Edited:
-									<strong class="essay-info-value">5</strong>
+								<span ng-show="essay.edited">Edited:
+									<strong class="essay-info-value">{{essay.edited}}</strong>
 								</span>
 							</small>
 						</div>
 						<div class="col-sm-6 col-xs-6 no-pad-r text-right">
 							<small class="essay-info">
 								<span>Words:
-									<strong class="essay-info-value">15</strong>
+									<strong class="essay-info-value">{{vm.numberOfWords(essay.essayText)}}</strong>
 								</span>
 								<span>Characters:
-									<strong class="essay-info-value">155</strong>
+									<strong class="essay-info-value">{{vm.numberOfCharacters(essay.essayText)}}</strong>
 								</span>
 							</small>
 						</div>

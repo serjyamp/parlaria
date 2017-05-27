@@ -51,10 +51,11 @@ function fire($log, $firebaseObject, $firebaseArray, $rootScope, AuthFactory) {
     // ESSAY
     var essayRef = ref.child(uid + '/essay');
     var allEssays = $firebaseArray(essayRef);
-    vm.addNewEssay = function(essayName, essayText) {
+    vm.addNewEssay = function(essayName, essayText, created) {
         var obj = {
             essayName: essayName,
-            essayText: essayText
+            essayText: essayText,
+            created: created
         };
 
         return allEssays.$add(obj);
@@ -64,5 +65,5 @@ function fire($log, $firebaseObject, $firebaseArray, $rootScope, AuthFactory) {
     };
 
     // NOTES
-    
+
 }
