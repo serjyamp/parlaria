@@ -9,11 +9,11 @@
         .navbar-collapse.collapse.navbar-inverse-collapse
             ul.nav.navbar-nav(ng-if="$root.firebaseUser")
                 li(ui-sref-active="active")
-                    a(ui-sref='words' href="") words
+                    a(ui-sref='words' ui-sref-opts="{reload:true}" href="") words
                 li(ui-sref-active="active")
-                    a(ui-sref='essay' href="") essay
+                    a(ui-sref='essay' ui-sref-opts="{reload:true}" href="") essay
                 li(ui-sref-active="active")
-                    a(ui-sref='notes' href="") notes
+                    a(ui-sref='notes' ui-sref-opts="{reload:true}" href="") notes
             ul.nav.navbar-nav.navbar-right(ng-if="!$root.firebaseUser")
                 li
                     a(href='javascript:void(0)' ng-click="vm.signIn()")

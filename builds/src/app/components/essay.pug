@@ -1,52 +1,53 @@
 .row.new-essay-control(ng-show="vm.essaysList.length")
 	button.btn.btn-raised.btn-success(ng-click="vm.showNewEssayForm = !vm.showNewEssayForm") New essay
 .new-essay(ng-show="vm.showNewEssayForm")
-	form(ng-submit="vm.addNewEssay()")
-		.panel
-			.panel-body
-				.row
-					.form-group
-						input.form-control(type="text" placeholder="Name of essay" ng-model="vm.essayName" ng-change="vm.essayErrorMsg = false" required)
-		.panel
-			.panel-body
-				wysiwyg(textarea-id='question', textarea-class='form-control', textarea-height='250px', textarea-name='textareaQuestion', textarea-required='required', ng-model="vm.essayText", enable-bootstrap-title='true' ng-change="vm.essayErrorMsg = false")
-			.panel-footer
-				.row.essay-info-row
-					.col-sm-6.col-xs-6.no-pad-l
-						small.essay-info
-							span
-								| Words: 
-								strong.essay-info-value {{vm.numberOfWords(vm.essayText)}}
-							span
-								| Characters: 
-								strong.essay-info-value {{vm.numberOfCharacters(vm.essayText)}}
-					.col-sm-6.col-xs-6.no-pad-r.text-right
-						span.text-danger.essay-msg(ng-show="vm.essayErrorMsg") Essay hasn't been saved. Check it and try again.
-						button.btn.btn-raised.btn-default(type="button" ng-click="vm.cancelNewEssay()" ng-show="vm.essaysList.length")
-							| Clear & Close
-						button.btn.btn-raised.btn-success(type="submit")
-							| Save
+	.panel
+		.panel-body
+			.row
+				.form-group
+					input.form-control(type="text" placeholder="Name of essay" ng-model="vm.essayName" ng-change="vm.essayNotSavedErrorMsg = false; vm.essayEmptyErrorMsg = false;" required)
+	.panel
+		.panel-body
+			wysiwyg(textarea-id='question', textarea-class='form-control', textarea-height='250px', textarea-name='textareaQuestion', textarea-required='required', ng-model="vm.essayText", enable-bootstrap-title='true' ng-change="vm.essayNotSavedErrorMsg = false; vm.essayEmptyErrorMsg = false;")
+		.panel-footer
+			.row.essay-info-row.flex-vam
+				.col-sm-6.col-xs-6.no-pad-l
+					small.essay-info
+						span
+							| Words: 
+							strong.essay-info-value {{vm.numberOfWords(vm.essayText)}}
+						span
+							| Characters: 
+							strong.essay-info-value {{vm.numberOfCharacters(vm.essayText)}}
+				.col-sm-6.col-xs-6.no-pad-r.text-right
+					span.text-danger.essay-msg(ng-show="vm.essayNotSavedErrorMsg") Essay hasn't been saved. Check it and try again.
+					span.text-danger.essay-msg(ng-show="vm.essayEmptyErrorMsg") Fields can't be empty.
+					button.btn.btn-raised.btn-default(type="button" ng-click="vm.cancelNewEssay()" ng-show="vm.essaysList.length")
+						| Clear & Close
+					button.btn.btn-raised.btn-success(type="button" ng-click="vm.addNewEssay()")
+						| Save
 .essays(ng-show="vm.essaysList.length")
 	.essays-list
 		.essays-list__item(ng-repeat="essay in vm.essaysList | orderBy:reverse:true" ng-init="showEssay = false")
 			.panel
-				form(ng-submit="vm.saveCurrentEssay(essay)")
-					.panel-body
-						.row.essay-header-row
-							.col-sm-10.col-xs-10.no-pad-l
-								.form-group
-									input.form-control(type="text" ng-model="essay.essayName" ng-readonly="!showEssay" required)
-							.col-sm-2.col-xs-2.no-pad-r.text-right
-								button.btn.btn-raised.btn-info(ng-click="showEssay = !showEssay")
-									span(ng-show="!showEssay") Show
-									span(ng-show="showEssay") Hide
-						.row.real-essay-editor(ng-show="showEssay")
-							wysiwyg(textarea-id='realEssayEditor', textarea-class='form-control', textarea-height='250px', textarea-name='textareaQuestion', textarea-required='required', ng-model="essay.essayText" enable-bootstrap-title='true')
-							.row
-								.col-sm-6.col-xs-6.no-pad-l
-									button.btn.btn-raised(ng-click="vm.deleteEssay(essay)") Delete essay
-								.col-sm-6.col-xs-6.text-right.no-pad-r
-									button.btn.btn-raised.btn-success(type="submit") Save
+				.panel-body
+					.row.flex-vam
+						.col-sm-10.col-xs-10.no-pad-l
+							.form-group
+								input.form-control(type="text" ng-model="essay.essayName" ng-readonly="!showEssay" ng-change="vm.essayCurrentNotSavedErrorMsg = false; vm.essayCurrentEmptyErrorMsg = false;" required)
+						.col-sm-2.col-xs-2.no-pad-r.text-right
+							button.btn.btn-raised.btn-info(ng-click="showEssay = !showEssay")
+								span(ng-show="!showEssay") Show
+								span(ng-show="showEssay") Hide
+					.row.real-essay-editor(ng-show="showEssay")
+						wysiwyg(textarea-id='realEssayEditor', textarea-class='form-control', textarea-height='250px', textarea-name='textareaQuestion', textarea-required='required', ng-model="essay.essayText" ng-change="vm.essayCurrentNotSavedErrorMsg = false; vm.essayCurrentEmptyErrorMsg = false;" enable-bootstrap-title='true')
+						.row
+							.col-sm-6.col-xs-6.no-pad-l
+								button.btn.btn-raised(ng-click="vm.deleteEssay(essay)") Delete essay
+							.col-sm-6.col-xs-6.text-right.no-pad-r
+								span.text-danger.essay-msg(ng-show="vm.essayCurrentNotSavedErrorMsg") Essay hasn't been saved. Check it and try again.
+								span.text-danger.essay-msg(ng-show="vm.essayCurrentEmptyErrorMsg") Fields can't be empty.
+								button.btn.btn-raised.btn-success(type="button" ng-click="vm.saveCurrentEssay(essay)") Save
 				.panel-footer
 					.row.essay-info-row
 						.col-sm-6.col-xs-6.no-pad-l
@@ -54,9 +55,6 @@
 								span
 									| Created: 
 									strong.essay-info-value {{essay.created}}
-								span(ng-show="essay.edited")
-									| Edited: 
-									strong.essay-info-value {{essay.edited}}
 						.col-sm-6.col-xs-6.no-pad-r.text-right
 							small.essay-info
 								span

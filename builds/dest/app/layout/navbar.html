@@ -11,13 +11,13 @@
 		<div class="navbar-collapse collapse navbar-inverse-collapse">
 			<ul class="nav navbar-nav" ng-if="$root.firebaseUser">
 				<li ui-sref-active="active">
-					<a ui-sref="words" href="">words</a>
+					<a ui-sref="words" ui-sref-opts="{reload:true}" href="">words</a>
 				</li>
 				<li ui-sref-active="active">
-					<a ui-sref="essay" href="">essay</a>
+					<a ui-sref="essay" ui-sref-opts="{reload:true}" href="">essay</a>
 				</li>
 				<li ui-sref-active="active">
-					<a ui-sref="notes" href="">notes</a>
+					<a ui-sref="notes" ui-sref-opts="{reload:true}" href="">notes</a>
 				</li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right" ng-if="!$root.firebaseUser">

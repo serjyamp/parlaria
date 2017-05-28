@@ -1,10 +1,10 @@
 
-EssayCtrl.$inject = ["fire", "$rootScope", "AuthFactory"];
-NotesCtrl.$inject = ["fire", "$rootScope", "AuthFactory"];
-WordsCtrl.$inject = ["fire", "$rootScope", "AuthFactory"];
 NavbarCtrl.$inject = ["$rootScope", "$state", "AuthFactory", "$location"];
 AuthFactory.$inject = ["$firebaseAuth"];
-fire.$inject = ["$log", "$firebaseObject", "$firebaseArray", "$rootScope", "AuthFactory"];$.material.init();
+fire.$inject = ["$log", "$firebaseObject", "$firebaseArray", "$rootScope", "AuthFactory"];
+EssayCtrl.$inject = ["fire", "$rootScope", "AuthFactory"];
+NotesCtrl.$inject = ["fire", "$rootScope", "AuthFactory"];
+WordsCtrl.$inject = ["fire", "$rootScope", "AuthFactory"];$.material.init();
 
 angular
     .module('further', [
@@ -50,157 +50,6 @@ function config($stateProvider, $urlRouterProvider, $locationProvider) {
         });
 }
 
-angular.module('further.Essay', [])
-    .controller('EssayCtrl', EssayCtrl);
-
-function EssayCtrl(fire, $rootScope, AuthFactory) {
-    var vm = this;
-
-    vm.showNewEssayForm = false;
-    vm.essayName = '';
-    vm.essayText = '';
-    vm.essayErrorMsg = false;
-    vm.essayCurrentSavedMsg = false;
-    vm.essaysList = [];
-
-    vm.cancelNewEssay = function() {
-        vm.essayName = '';
-        vm.essayText = '';
-        vm.showNewEssayForm = false;
-        vm.essayErrorMsg = false;
-    }
-
-    vm.addNewEssay = function() {
-        var date = new Date();
-
-        var month = date.getMonth() + 1;
-        if (month < 10) {
-            month = '0' + month;
-        }
-        var created = date.getDate() + '.' + month + '.' + date.getFullYear();
-
-
-        if (vm.essayName && vm.essayText) {
-            if (fire.addNewEssay(vm.essayName, vm.essayText, created)) {
-                vm.cancelNewEssay();
-            } else {
-                vm.essayErrorMsg = true;
-            }
-        }
-    };
-
-    vm.saveCurrentEssay = function(essay) {
-        var date = new Date();
-        var month = date.getMonth() + 1;
-        if (month < 10) {
-            month = '0' + month;
-        }
-        var hours = date.getHours();
-        var minutes = date.getMinutes();
-        var seconds = date.getSeconds();
-        
-        if (hours.toString().length == 1){
-            hours = '0' + hours;
-        }
-        if (minutes.toString().length == 1){
-            minutes = '0' + minutes;
-        }
-        if (seconds.toString().length == 1){
-            seconds = '0' + seconds;
-        }
-        var time = hours + ':' + minutes + ':' + seconds;
-
-        var edited = date.getDate() + '.' + month + '.' + date.getFullYear() + ', ' + time;
-
-        var obj = essay;
-        obj['edited'] = edited;
-        vm.essaysList.$save(obj);
-    };
-
-    vm.deleteEssay = function(essay) {
-        vm.essaysList.$remove(essay).then(function() {
-            if (!vm.essaysList.length) {
-                vm.showNewEssayForm = true;
-            }
-        });
-    };
-
-    fire.getAllEssays().then(function(_d) {
-        vm.essaysList = _d;
-
-        if (vm.essaysList.length) {
-            vm.showNewEssayForm = false;
-        } else {
-            vm.showNewEssayForm = true;
-        }
-    });
-
-    vm.numberOfWords = function(string) {
-        var tmp = document.createElement("div");
-        tmp.innerHTML = string;
-        var onlyText = tmp.textContent || tmp.innerText || "";
-
-        if (onlyText.length) {
-            return onlyText.split(' ').length;
-        }
-
-        return 0;
-    }
-    vm.numberOfCharacters = function(string) {
-        var tmp = document.createElement("div");
-        tmp.innerHTML = string;
-        var onlyText = tmp.textContent || tmp.innerText || "";
-
-        return onlyText.length;
-    }
-}
-
-angular.module('further.Notes', [])
-    .controller('NotesCtrl', NotesCtrl);
-
-function NotesCtrl(fire, $rootScope, AuthFactory) {
-    var vm = this;
-    vm.auth = AuthFactory;
-    vm.newWord = null;
-    vm.newWordTranslation = null;
-    vm.wordsList = [];
-    
-    vm.addNewWord = function() {
-        if (vm.newWord && vm.newWordTranslation) {
-            if (fire.addNewWord(vm.newWord, vm.newWordTranslation)){
-                vm.newWord = null;
-                vm.newWordTranslation = null;
-            }
-        }
-    };
-
-    fire.getAllWords().then(function(_d) {
-        vm.wordsList = _d;
-    });
-}
-angular.module('further.Words', [])
-    .controller('WordsCtrl', WordsCtrl);
-
-function WordsCtrl(fire, $rootScope, AuthFactory) {
-    var vm = this;
-    vm.auth = AuthFactory;
-    vm.newWord = null;
-    vm.newWordTranslation = null;
-    vm.wordsList = [];
-    
-    vm.addNewWord = function() {
-        if (vm.newWord && vm.newWordTranslation) {
-            if (fire.addNewWord(vm.newWord, vm.newWordTranslation)){
-                vm.newWord = null;
-                vm.newWordTranslation = null;
-            }
-        }
-    };
-
-    fire.getAllWords().then(function(_d) {
-        vm.wordsList = _d;
-    });
-}
 angular.module('further.Navbar', [])
     .controller('NavbarCtrl', NavbarCtrl);
 
@@ -322,4 +171,145 @@ function fire($log, $firebaseObject, $firebaseArray, $rootScope, AuthFactory) {
 
     // NOTES
 
+}
+
+angular.module('further.Essay', [])
+    .controller('EssayCtrl', EssayCtrl);
+
+function EssayCtrl(fire, $rootScope, AuthFactory) {
+    var vm = this;
+
+    vm.showNewEssayForm = false;
+    vm.essayName = '';
+    vm.essayText = '';
+    vm.essayNotSavedErrorMsg = false;
+    vm.essayEmptyErrorMsg = false;
+    vm.essayCurrentNotSavedErrorMsg = false;
+    vm.essayCurrentEmptyErrorMsg = false;
+    vm.essaysList = [];
+
+    vm.cancelNewEssay = function() {
+        vm.essayName = '';
+        vm.essayText = '';
+        vm.showNewEssayForm = false;
+        vm.essayNotSavedErrorMsg = false;
+        vm.essayEmptyErrorMsg = false;
+    }
+
+    vm.addNewEssay = function() {
+        var date = new Date();
+        var month = date.getMonth() + 1;
+        if (month < 10) {
+            month = '0' + month;
+        }
+        var created = date.getDate() + '.' + month + '.' + date.getFullYear();
+
+        if (vm.essayName && vm.essayText) {
+            if (fire.addNewEssay(vm.essayName, vm.essayText, created)) {
+                vm.cancelNewEssay();
+            } else {
+                vm.essayNotSavedErrorMsg = true;
+                vm.essayEmptyErrorMsg = false;
+            }
+        } else {
+            vm.essayNotSavedErrorMsg = false;
+            vm.essayEmptyErrorMsg = true;
+        }
+    };
+
+    vm.saveCurrentEssay = function(essay) {
+        if (essay.essayName && essay.essayText) {
+            vm.essaysList.$save(essay).then({}, function(){
+                vm.essayCurrentNotSavedErrorMsg = true;
+                vm.essayCurrentEmptyErrorMsg = false;
+            });
+        } else{
+            vm.essayCurrentNotSavedErrorMsg = false;
+            vm.essayCurrentEmptyErrorMsg = true;
+        }
+    };
+
+    vm.deleteEssay = function(essay) {
+        vm.essaysList.$remove(essay).then(function() {
+            if (!vm.essaysList.length) {
+                vm.showNewEssayForm = true;
+            }
+        });
+    };
+
+    fire.getAllEssays().then(function(_d) {
+        vm.essaysList = _d;
+
+        if (vm.essaysList.length) {
+            vm.showNewEssayForm = false;
+        } else {
+            vm.showNewEssayForm = true;
+        }
+    });
+
+    vm.numberOfWords = function(string) {
+        var tmp = document.createElement("div");
+        tmp.innerHTML = string;
+        var onlyText = tmp.textContent || tmp.innerText || "";
+
+        if (onlyText.length) {
+            return onlyText.split(' ').length;
+        }
+
+        return 0;
+    }
+    vm.numberOfCharacters = function(string) {
+        var tmp = document.createElement("div");
+        tmp.innerHTML = string;
+        var onlyText = tmp.textContent || tmp.innerText || "";
+
+        return onlyText.length;
+    }
+}
+
+angular.module('further.Notes', [])
+    .controller('NotesCtrl', NotesCtrl);
+
+function NotesCtrl(fire, $rootScope, AuthFactory) {
+    var vm = this;
+    vm.auth = AuthFactory;
+    vm.newWord = null;
+    vm.newWordTranslation = null;
+    vm.wordsList = [];
+    
+    vm.addNewWord = function() {
+        if (vm.newWord && vm.newWordTranslation) {
+            if (fire.addNewWord(vm.newWord, vm.newWordTranslation)){
+                vm.newWord = null;
+                vm.newWordTranslation = null;
+            }
+        }
+    };
+
+    fire.getAllWords().then(function(_d) {
+        vm.wordsList = _d;
+    });
+}
+angular.module('further.Words', [])
+    .controller('WordsCtrl', WordsCtrl);
+
+function WordsCtrl(fire, $rootScope, AuthFactory) {
+    var vm = this;
+    vm.auth = AuthFactory;
+    vm.newWord = null;
+    vm.newWordTranslation = null;
+    vm.wordsList = [];
+    
+    vm.addNewWord = function() {
+        if (vm.newWord && vm.newWordTranslation) {
+            if (fire.addNewWord(vm.newWord, vm.newWordTranslation)){
+                vm.newWord = null;
+                vm.newWordTranslation = null;
+            }
+        }
+    };
+
+    fire.getAllWords().then(function(_d) {
+        vm.wordsList = _d;
+    });
 }
