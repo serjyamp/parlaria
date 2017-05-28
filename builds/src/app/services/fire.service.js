@@ -27,7 +27,7 @@ function fire($log, $firebaseObject, $firebaseArray, $rootScope, AuthFactory) {
     vm.getAllWords = function(cb) {
         return allWords.$loaded(cb);
     };
-    vm.addNewWord = function(word, translation) {
+    vm.addNewWord = function(word, translation, created) {
         var duplicate = false;
         angular.forEach(allWords, function(value, key) {
             if (value.word == word) {
@@ -39,7 +39,8 @@ function fire($log, $firebaseObject, $firebaseArray, $rootScope, AuthFactory) {
         if (!duplicate) {
             var obj = {
                 word: word,
-                translation: translation
+                translation: translation,
+                created: created
             };
 
             return allWords.$add(obj);

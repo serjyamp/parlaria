@@ -3,12 +3,13 @@ $.material.init();
 angular
     .module('further', [
         'ui.router',
-        // 'textAngular',
         'wysiwyg.module',
+        'chart.js',
         'further.Navbar',
         'further.Words',
         'further.Essay',
         'further.Phrases',
+        'further.Statistics',
         'further.fire.service',
         'further.auth.factory'
     ])
@@ -40,6 +41,12 @@ function config($stateProvider, $urlRouterProvider, $locationProvider) {
             url: '/phrases',
             templateUrl: 'app/components/phrases.html',
             controller: 'PhrasesCtrl',
+            controllerAs: 'vm'
+        })
+        .state('statistics', {
+            url: '/statistics',
+            templateUrl: 'app/components/statistics.html',
+            controller: 'StatisticsCtrl',
             controllerAs: 'vm'
         });
 }

@@ -7,10 +7,17 @@ function WordsCtrl(fire, $rootScope, AuthFactory) {
     vm.newWord = null;
     vm.newWordTranslation = null;
     vm.wordsList = [];
-    
+
     vm.addNewWord = function() {
         if (vm.newWord && vm.newWordTranslation) {
-            if (fire.addNewWord(vm.newWord, vm.newWordTranslation)){
+            var date = new Date();
+            var month = date.getMonth() + 1;
+            if (month < 10) {
+                month = '0' + month;
+            }
+            var created = date.getDate() + '.' + month + '.' + date.getFullYear();
+
+            if (fire.addNewWord(vm.newWord, vm.newWordTranslation, created)) {
                 vm.newWord = null;
                 vm.newWordTranslation = null;
             }

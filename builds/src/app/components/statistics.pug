@@ -1,0 +1,25 @@
+.panel(ng-show="vm.wordsList.length")
+	.panel-heading
+		| How many 
+		strong words
+		|  I've learnt
+	.panel-body
+		.col-sm-9.col-xs-9
+			canvas#line.chart.chart-line(chart-data='data', chart-labels='labels', chart-options='options', chart-dataset-override='datasetOverride', chart-click='onClick')
+		.col-sm-3.col-xs-3.text-right
+			| Total amount: 
+			strong {{vm.numberOfWords}}
+.panel(ng-show="vm.essaysList.length")
+	.panel-heading
+		| How many 
+		strong essays
+		|  I've written
+	.panel-body
+		.col-sm-9.col-xs-9
+			canvas#bar.chart.chart-bar(chart-data='data', chart-labels='labels', chart-series='series')
+		.col-sm-3.col-xs-3.text-right
+			| Total amount: 
+			strong {{vm.numberOfWords}}
+
+.panel(ng-show="!vm.wordsList.length && !vm.essaysList.length")
+	.panel-body There is no statistics. You have not added neither word nor essay.

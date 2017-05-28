@@ -20,8 +20,8 @@
                         i.fa.fa-sign-in
                         |  Login
             ul.nav.navbar-nav.navbar-right(ng-if="$root.firebaseUser")
-                li
-                    a(href='javascript:void(0)' ng-click="")
+                li(ui-sref-active="active")
+                    a(ui-sref='statistics' ui-sref-opts="{reload:true}" href="")
                         i.fa.fa-bar-chart
                         |  statistics
                 li

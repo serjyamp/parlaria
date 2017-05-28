@@ -1,0 +1,27 @@
+<div class="panel" ng-show="vm.wordsList.length">
+	<div class="panel-heading">How many
+		<strong>words</strong> I've learnt</div>
+	<div class="panel-body">
+		<div class="col-sm-9 col-xs-9">
+			<canvas class="chart chart-line" id="line" chart-data="data" chart-labels="labels" chart-options="options" chart-dataset-override="datasetOverride" chart-click="onClick"></canvas>
+		</div>
+		<div class="col-sm-3 col-xs-3 text-right">Total amount:
+			<strong>{{vm.numberOfWords}}</strong>
+		</div>
+	</div>
+</div>
+<div class="panel" ng-show="vm.essaysList.length">
+	<div class="panel-heading">How many
+		<strong>essays</strong> I've written</div>
+	<div class="panel-body">
+		<div class="col-sm-9 col-xs-9">
+			<canvas class="chart chart-bar" id="bar" chart-data="data" chart-labels="labels" chart-series="series"></canvas>
+		</div>
+		<div class="col-sm-3 col-xs-3 text-right">Total amount:
+			<strong>{{vm.numberOfWords}}</strong>
+		</div>
+	</div>
+</div>
+<div class="panel" ng-show="!vm.wordsList.length &amp;&amp; !vm.essaysList.length">
+	<div class="panel-body">There is no statistics. You have not added neither word nor essay.</div>
+</div>

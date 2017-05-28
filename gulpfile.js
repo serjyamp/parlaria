@@ -13,6 +13,7 @@ var gulp = require('gulp'),
     pug = require('gulp-pug');
 
 var bc = './bower_components/';
+var nm = './node_modules/';
 
 gulp.task('js', function() {
     gulp.src('builds/src/app/**/*.js')
@@ -103,6 +104,11 @@ gulp.task('vendor', function() {
 
     gulp.src(bc + 'angular-wysiwyg/dist/angular-wysiwyg.min.js')
         .pipe(gulp.dest('./builds/dest/vendor/angular-wysiwyg'));
+
+    gulp.src(bc + 'chart.js/dist/Chart.min.js')
+        .pipe(gulp.dest('./builds/dest/vendor'));
+    gulp.src(nm + 'angular-chart.js/dist/angular-chart.min.js')
+        .pipe(gulp.dest('./builds/dest/vendor'));
 });
 
 gulp.task('connect', function() {
