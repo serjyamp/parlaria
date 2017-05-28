@@ -28,8 +28,8 @@
 					</small>
 				</div>
 				<div class="col-sm-6 col-xs-6 no-pad-r text-right">
-					<span class="text-danger essay-msg" ng-show="vm.essayNotSavedErrorMsg">Essay hasn't been saved. Check it and try again.</span>
-					<span class="text-danger essay-msg" ng-show="vm.essayEmptyErrorMsg">Fields can't be empty.</span>
+					<span class="text-danger operation-msg" ng-show="vm.essayNotSavedErrorMsg">Essay hasn't been saved. Check it and try again.</span>
+					<span class="text-danger operation-msg" ng-show="vm.essayEmptyErrorMsg">Fields can't be empty.</span>
 					<button class="btn btn-raised btn-default" type="button" ng-click="vm.cancelNewEssay()" ng-show="vm.essaysList.length">Clear & Close</button>
 					<button class="btn btn-raised btn-success" type="button" ng-click="vm.addNewEssay()">Save</button>
 				</div>
@@ -60,11 +60,11 @@
 						 enable-bootstrap-title="true"></wysiwyg>
 						<div class="row">
 							<div class="col-sm-6 col-xs-6 no-pad-l">
-								<button class="btn btn-raised" ng-click="vm.deleteEssay(essay)">Delete essay</button>
+								<button class="btn btn-raised" ng-click="vm.deleteEssay(essay)">Delete</button>
 							</div>
 							<div class="col-sm-6 col-xs-6 text-right no-pad-r">
-								<span class="text-danger essay-msg" ng-show="vm.essayCurrentNotSavedErrorMsg">Essay hasn't been saved. Check it and try again.</span>
-								<span class="text-danger essay-msg" ng-show="vm.essayCurrentEmptyErrorMsg">Fields can't be empty.</span>
+								<span class="text-danger operation-msg" ng-show="vm.essayCurrentNotSavedErrorMsg">Essay hasn't been saved. Check it and try again.</span>
+								<span class="text-danger operation-msg" ng-show="vm.essayCurrentEmptyErrorMsg">Fields can't be empty.</span>
 								<button class="btn btn-raised btn-success" type="button" ng-click="vm.saveCurrentEssay(essay)">Save</button>
 							</div>
 						</div>

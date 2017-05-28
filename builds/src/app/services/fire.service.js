@@ -64,6 +64,19 @@ function fire($log, $firebaseObject, $firebaseArray, $rootScope, AuthFactory) {
         return allEssays.$loaded(cb);
     };
 
-    // NOTES
+    // PHRASES
+    var phrasesRef = ref.child(uid + '/phrases');
+    var allPhrases = $firebaseArray(phrasesRef);
+    vm.addNewPhrase = function(phrase, description, created) {
+        var obj = {
+            phrase: phrase,
+            description: description,
+            created: created
+        };
 
+        return allPhrases.$add(obj);
+    };
+    vm.getAllPhrases = function(cb) {
+        return allPhrases.$loaded(cb);
+    };
 }

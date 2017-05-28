@@ -20,8 +20,8 @@
 							| Characters: 
 							strong.essay-info-value {{vm.numberOfCharacters(vm.essayText)}}
 				.col-sm-6.col-xs-6.no-pad-r.text-right
-					span.text-danger.essay-msg(ng-show="vm.essayNotSavedErrorMsg") Essay hasn't been saved. Check it and try again.
-					span.text-danger.essay-msg(ng-show="vm.essayEmptyErrorMsg") Fields can't be empty.
+					span.text-danger.operation-msg(ng-show="vm.essayNotSavedErrorMsg") Essay hasn't been saved. Check it and try again.
+					span.text-danger.operation-msg(ng-show="vm.essayEmptyErrorMsg") Fields can't be empty.
 					button.btn.btn-raised.btn-default(type="button" ng-click="vm.cancelNewEssay()" ng-show="vm.essaysList.length")
 						| Clear & Close
 					button.btn.btn-raised.btn-success(type="button" ng-click="vm.addNewEssay()")
@@ -43,10 +43,10 @@
 						wysiwyg(textarea-id='realEssayEditor', textarea-class='form-control', textarea-height='250px', textarea-name='textareaQuestion', textarea-required='required', ng-model="essay.essayText" ng-change="vm.essayCurrentNotSavedErrorMsg = false; vm.essayCurrentEmptyErrorMsg = false;" enable-bootstrap-title='true')
 						.row
 							.col-sm-6.col-xs-6.no-pad-l
-								button.btn.btn-raised(ng-click="vm.deleteEssay(essay)") Delete essay
+								button.btn.btn-raised(ng-click="vm.deleteEssay(essay)") Delete
 							.col-sm-6.col-xs-6.text-right.no-pad-r
-								span.text-danger.essay-msg(ng-show="vm.essayCurrentNotSavedErrorMsg") Essay hasn't been saved. Check it and try again.
-								span.text-danger.essay-msg(ng-show="vm.essayCurrentEmptyErrorMsg") Fields can't be empty.
+								span.text-danger.operation-msg(ng-show="vm.essayCurrentNotSavedErrorMsg") Essay hasn't been saved. Check it and try again.
+								span.text-danger.operation-msg(ng-show="vm.essayCurrentEmptyErrorMsg") Fields can't be empty.
 								button.btn.btn-raised.btn-success(type="button" ng-click="vm.saveCurrentEssay(essay)") Save
 				.panel-footer
 					.row.essay-info-row

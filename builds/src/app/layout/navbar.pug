@@ -5,15 +5,15 @@
                 span.icon-bar
                 span.icon-bar
                 span.icon-bar
-            a.navbar-brand(ui-sref='/') Parlaria
+            a.navbar-brand(ui-sref='/' ui-sref-opts="{reload:true}") Parlaria
         .navbar-collapse.collapse.navbar-inverse-collapse
             ul.nav.navbar-nav(ng-if="$root.firebaseUser")
                 li(ui-sref-active="active")
                     a(ui-sref='words' ui-sref-opts="{reload:true}" href="") words
                 li(ui-sref-active="active")
-                    a(ui-sref='essay' ui-sref-opts="{reload:true}" href="") essay
+                    a(ui-sref='phrases' ui-sref-opts="{reload:true}" href="") phrases
                 li(ui-sref-active="active")
-                    a(ui-sref='notes' ui-sref-opts="{reload:true}" href="") notes
+                    a(ui-sref='essay' ui-sref-opts="{reload:true}" href="") essay
             ul.nav.navbar-nav.navbar-right(ng-if="!$root.firebaseUser")
                 li
                     a(href='javascript:void(0)' ng-click="vm.signIn()")
@@ -23,11 +23,7 @@
                 li
                     a(href='javascript:void(0)' ng-click="")
                         i.fa.fa-bar-chart
-                        |  My stats
-                li
-                    a(href='javascript:void(0)' ng-click="")
-                        i.fa.fa-cogs
-                        |  Settings
+                        |  statistics
                 li
                     a(href='javascript:void(0)' ng-click="vm.signOut()")
                         i.fa.fa-sign-out

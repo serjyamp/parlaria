@@ -14,7 +14,7 @@
 .panel
 	.panel-body
 		.list-group
-			.list-group-item(ng-repeat="word in vm.wordsList")
+			.list-group-item(ng-repeat="word in vm.wordsList | orderBy:reverse:true")
 				.row
 					.col-sm-5.col-xs-5
 						.form-group

@@ -8,7 +8,7 @@ angular
         'further.Navbar',
         'further.Words',
         'further.Essay',
-        'further.Notes',
+        'further.Phrases',
         'further.fire.service',
         'further.auth.factory'
     ])
@@ -36,10 +36,10 @@ function config($stateProvider, $urlRouterProvider, $locationProvider) {
             controller: 'EssayCtrl',
             controllerAs: 'vm'
         })
-        .state('notes', {
-            url: '/notes',
-            templateUrl: 'app/components/notes.html',
-            controller: 'NotesCtrl',
+        .state('phrases', {
+            url: '/phrases',
+            templateUrl: 'app/components/phrases.html',
+            controller: 'PhrasesCtrl',
             controllerAs: 'vm'
         });
 }
