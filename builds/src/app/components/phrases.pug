@@ -1,11 +1,11 @@
 .panel
 	.panel-body
 		.row
-			.col-sm-12.col-xs-12.add_item_block
+			.col-sm-12.col-xs-12
 				.form-group
 					input.form-control(type="text" ng-model="vm.newPhrase" placeholder="Phrase" required ng-change="vm.phraseNotSavedErrorMsg = false; vm.phraseEmptyErrorMsg = false;")
 		.row
-			.col-sm-12.col-xs-12.add_item_block
+			.col-sm-12.col-xs-12
 				.form-group
 					textarea.form-control(type="text" ng-model="vm.newPhraseDescription" placeholder="Description" ng-change="vm.phraseNotSavedErrorMsg = false; vm.phraseEmptyErrorMsg = false;")
 	.panel-footer
@@ -13,17 +13,16 @@
 			.col-sm-12.col-xs-12.text-right
 				span.text-danger.operation-msg(ng-show="vm.phraseNotSavedErrorMsg") Phrase hasn't been saved. Check it and try again.
 				span.text-danger.operation-msg(ng-show="vm.phraseEmptyErrorMsg") Please type your phrase.
-				button.btn.btn-raised.btn-success(type="button" ng-click="vm.addNewPhrase()")
-					| Add
+				button.btn.btn-raised.btn-success(type="button" ng-click="vm.addNewPhrase()") Add
 .phrases(ng-show="vm.phrasesList.length")
 	.panel(ng-repeat="phrase in vm.phrasesList | orderBy:reverse:true")
 		.panel-body
 			.row
-				.col-sm-12.col-xs-12.add_item_block
+				.col-sm-12.col-xs-12
 					.form-group
 						input.form-control(type="text" ng-model="phrase.phrase" placeholder="Phrase" ng-change="vm.saveCurrentPhrase(phrase)")
 			.row
-				.col-sm-12.col-xs-12.add_item_block
+				.col-sm-12.col-xs-12
 					.form-group
 						textarea.form-control(type="text" ng-model="phrase.description" placeholder="Description" ng-change="vm.saveCurrentPhrase(phrase)")
 		.panel-footer

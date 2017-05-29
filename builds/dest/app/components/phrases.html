@@ -1,14 +1,14 @@
 <div class="panel">
 	<div class="panel-body">
 		<div class="row">
-			<div class="col-sm-12 col-xs-12 add_item_block">
+			<div class="col-sm-12 col-xs-12">
 				<div class="form-group">
 					<input class="form-control" type="text" ng-model="vm.newPhrase" placeholder="Phrase" required="required" ng-change="vm.phraseNotSavedErrorMsg = false; vm.phraseEmptyErrorMsg = false;" />
 				</div>
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-sm-12 col-xs-12 add_item_block">
+			<div class="col-sm-12 col-xs-12">
 				<div class="form-group">
 					<textarea class="form-control" type="text" ng-model="vm.newPhraseDescription" placeholder="Description" ng-change="vm.phraseNotSavedErrorMsg = false; vm.phraseEmptyErrorMsg = false;"></textarea>
 				</div>
@@ -29,14 +29,14 @@
 	<div class="panel" ng-repeat="phrase in vm.phrasesList | orderBy:reverse:true">
 		<div class="panel-body">
 			<div class="row">
-				<div class="col-sm-12 col-xs-12 add_item_block">
+				<div class="col-sm-12 col-xs-12">
 					<div class="form-group">
 						<input class="form-control" type="text" ng-model="phrase.phrase" placeholder="Phrase" ng-change="vm.saveCurrentPhrase(phrase)" />
 					</div>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-sm-12 col-xs-12 add_item_block">
+				<div class="col-sm-12 col-xs-12">
 					<div class="form-group">
 						<textarea class="form-control" type="text" ng-model="phrase.description" placeholder="Description" ng-change="vm.saveCurrentPhrase(phrase)"></textarea>
 					</div>
