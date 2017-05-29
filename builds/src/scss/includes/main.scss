@@ -1,6 +1,6 @@
 body,
 html {
-    font-family: 'Lato', sans-serif;
+    font-family: 'Open Sans', sans-serif;
     font-size: 18px;
     min-width: 768px;
     min-height: 100vh;
@@ -74,16 +74,17 @@ footer {
 }
 
 .start__slogan {
-    font-size: 31px;
-    font-style: italic;
-    font-weight: 400;
-    line-height: 33px;
+    font-size: 35px;
+    line-height: 35px;
+    font-family: 'Pacifico', cursive;
+    letter-spacing: 1px;
 }
 
 .start__cptn {
+    // color: $c_black;
     font-family: 'Pacifico', cursive;
-    font-size: 210px;
-    line-height: 210px;
+    font-size: 220px;
+    line-height: 220px;
     margin-bottom: 35px;
     @include stroke(1.5,$c_black);
 }
