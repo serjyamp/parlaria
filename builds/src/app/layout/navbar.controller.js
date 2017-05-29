@@ -1,7 +1,7 @@
 angular.module('further.Navbar', [])
     .controller('NavbarCtrl', NavbarCtrl);
 
-function NavbarCtrl($rootScope, $state, AuthFactory, $location) {
+function NavbarCtrl($rootScope, $state, AuthFactory, $location, $window) {
     var vm = this;
     vm.auth = AuthFactory;
 
@@ -19,6 +19,7 @@ function NavbarCtrl($rootScope, $state, AuthFactory, $location) {
     vm.signOut = function() {
         vm.auth.signOut();
         $state.go('/');
+        $window.location.reload();
     };
     vm.signIn = function() {
         vm.auth.signIn();
