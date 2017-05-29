@@ -78,6 +78,7 @@ footer {
     line-height: 35px;
     font-family: 'Pacifico', cursive;
     letter-spacing: 1px;
+    @include stroke(1,$c_black);
 }
 
 .start__cptn {
