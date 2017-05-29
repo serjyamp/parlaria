@@ -1,31 +1,33 @@
-.panel(ng-show="vm.wordsList.length")
-	.panel-heading
-		| How many 
-		strong words
-		|  I've learnt
-	.panel-body
-		.col-sm-9.col-xs-9
-			canvas#line.chart.chart-line(chart-data='vm.wordsValues', chart-labels='vm.wordsLabels', chart-options='options', chart-dataset-override='datasetOverride', chart-click='onClick')
-		.col-sm-3.col-xs-3.text-right
-			| Total amount: 
-			strong {{vm.numberOfWords}}
-			div.pie-wr(ng-show="vm.numberOfEssays")
-				canvas#pie.chart.chart-pie(chart-data='vm.pieData' chart-labels='vm.pieLabels' chart-options='optionsPie' height="350px")
-.panel(ng-show="vm.essaysList.length")
-	.panel-heading
-		| How many 
-		strong essays
-		|  I've written
-	.panel-body
-		.col-sm-9.col-xs-9
-			canvas#bar.chart.chart-bar(chart-data='vm.essaysValues' chart-labels='vm.essaysLabels' chart-options="optionsEssay" chart-dataset-override="datasetOverrideEssay")
-		.col-sm-3.col-xs-3.text-right
-			| Total amount: 
-			strong {{vm.numberOfEssays}}
-.panel(ng-show="!vm.wordsList.length && !vm.essaysList.length")
-	.panel-body
-		| There is no statistics. You have not added neither
-		strong word
-		|  nor 
-		strong essay
-		| .
+.common-container-wr
+	.container
+		.panel(ng-show="vm.wordsList.length")
+			.panel-heading
+				| How many 
+				strong words
+				|  I've learnt
+			.panel-body
+				.col-sm-9.col-xs-9
+					canvas#line.chart.chart-line(chart-data='vm.wordsValues', chart-labels='vm.wordsLabels', chart-options='options', chart-dataset-override='datasetOverride', chart-click='onClick')
+				.col-sm-3.col-xs-3.text-right
+					| Total amount: 
+					strong {{vm.numberOfWords}}
+					div.pie-wr(ng-show="vm.numberOfEssays")
+						canvas#pie.chart.chart-pie(chart-data='vm.pieData' chart-labels='vm.pieLabels' chart-options='optionsPie' height="350px")
+		.panel(ng-show="vm.essaysList.length")
+			.panel-heading
+				| How many 
+				strong essays
+				|  I've written
+			.panel-body
+				.col-sm-9.col-xs-9
+					canvas#bar.chart.chart-bar(chart-data='vm.essaysValues' chart-labels='vm.essaysLabels' chart-options="optionsEssay" chart-dataset-override="datasetOverrideEssay")
+				.col-sm-3.col-xs-3.text-right
+					| Total amount: 
+					strong {{vm.numberOfEssays}}
+		.panel(ng-show="!vm.wordsList.length && !vm.essaysList.length")
+			.panel-body
+				| There is no statistics. You have not added neither
+				strong word
+				|  nor 
+				strong essay
+				| .

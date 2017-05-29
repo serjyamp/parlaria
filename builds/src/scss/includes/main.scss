@@ -13,50 +13,79 @@ html {
     font-family: 'Pacifico', cursive;
 }
 
-.nav{
+.nav {
     text-transform: uppercase;
     font-size: 15px;
 }
 
+.navbar{
+    background: $c_blue !important;
+}
+
+main {
+    // min-height: 100vh;
+    // height: auto;
+    // margin: 0 auto -50px;
+    // padding: 100px 0;
+}
+
 .main-start {
     width: 100%;
+    min-height: 100vh;
+    height: auto;
+    margin: 0 auto -66px;
+    padding: 100px 0;
+    display: flex;
+    align-items: center;
+    background: $c_blue;
+}
+
+.common-container-wr{
+    padding-top: 100px;
+    padding-bottom: 50px;
 }
 
 footer {
-    background: #000;
     color: #fff;
-    height: 50px;
+    height: 66px;
     text-align: center;
-    font-size: 16px;
+    font-size: 18px;
     display: flex;
     align-items: center;
 }
 
-.footer_link {
+.footer__link {
     text-decoration: none !important;
-    color: #fff;
+    color: $c_main;
     transition: .2s;
+    border-bottom: 1px solid $c_main;
+    &:hover{
+        border-color: transparent;
+    }
     @include haf {
-        color: $c_orange;
+        color: $c_main;
     }
 }
 
 .start {
     text-align: center;
     position: relative;
-    color: $c_orange;
+    color: $c_main;
 }
 
 .start__slogan {
-    font-size: 46px;
+    font-size: 31px;
     font-style: italic;
+    font-weight: 400;
+    line-height: 33px;
 }
 
 .start__cptn {
     font-family: 'Pacifico', cursive;
-    font-size: 190px;
-    line-height: 190px;
+    font-size: 210px;
+    line-height: 210px;
     margin-bottom: 35px;
+    @include stroke(1.5,$c_black);
 }
 
 .panel-inner {
@@ -74,21 +103,12 @@ footer {
     }
 }
 
-main {
-    min-height: 100vh;
-    height: auto;
-    margin: 0 auto -50px;
-    padding: 100px 0;
-    // display: flex;
-    // align-items: center;
-    // justify-content: center;
-}
-
 .btn-fab-mini {
     line-height: 0 !important;
 }
 
-#question, #realEssayEditor {
+#question,
+#realEssayEditor {
     border: 1px solid #ccc;
     background: #FFF;
 }
@@ -111,18 +131,25 @@ main {
     display: inline-block;
     vertical-align: top;
 }
-.flex-vam{
+
+.flex-vam {
     display: flex;
     align-items: center;
 }
-.essay-info{
+
+.essay-info {
     text-transform: uppercase;
-    span{
-        & + span{
+    span {
+        & + span {
             margin-left: 7px;
         }
     }
 }
-.pie-wr{
+
+.pie-wr {
     padding-top: 25px;
+}
+
+.nav i{
+    margin-right: 5px;
 }

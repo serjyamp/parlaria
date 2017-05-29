@@ -12,13 +12,8 @@ head
 	link(rel="stylesheet", href="css/styles.min.css")
 body(ng-cloak ng-app="further")
 	div(ng-include="'app/layout/navbar.html'")
-	main
-		.container(ui-view)
-	footer
-		.container
-			| © 
-			a.footer_link(href="https://www.linkedin.com/in/serjyamp" target="_blank") Serhii Yampolskyi
-			| , 2017. All rights reserved.
+	main(ui-view)
+		
 
 
 	//- vendor files

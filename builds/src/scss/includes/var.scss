@@ -34,7 +34,24 @@
     }
 }
 
+@function stroke($stroke, $color) {
+  $shadow: ();
+  $from: $stroke*-1;
+  @for $i from $from through $stroke {
+   @for $j from $from through $stroke {
+      $shadow: append($shadow, $i*1px $j*1px 0 $color, comma);
+    }
+  }
+  @return $shadow;
+}
+
+@mixin stroke($stroke, $color) {
+  text-shadow: stroke($stroke, $color);
+}
+
 // colors
-$c_orange: #FFAB40;
+$c_main: #fff;
+$c_black: #393E41;
+$c_blue: #3A7CA5;
 // fonts
 // paths

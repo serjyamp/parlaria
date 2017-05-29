@@ -1,28 +1,30 @@
-.panel
-	form(ng-submit="vm.addNewWord()")
-		.panel-body
-			.row
-				.col-sm-6.col-xs-6
-					.form-group
-						input.form-control(type="text" ng-model="vm.newWord" placeholder="Word" name="word" required)
-				.col-sm-6.col-xs-6
-					.form-group
-						input.form-control(type="text" ng-model="vm.newWordTranslation" placeholder="Translation" name="translation" required)
-		.panel-footer
-			.row
-				.col-sm-12.col-xs-12.text-right
-					button.btn.btn-raised.btn-success(type="submit") Add
-.panel(ng-show="vm.wordsList.length")
-	.panel-body
-		.list-group
-			.list-group-item(ng-repeat="word in vm.wordsList | orderBy:reverse:true")
-				.row
-					.col-sm-5.col-xs-5
-						.form-group
-							input.form-control(type="text" ng-model="word.word" ng-change="vm.wordsList.$save(word)")
-					.col-sm-6.col-xs-6
-						.form-group
-							input.form-control(type="text" ng-model="word.translation" ng-change="vm.wordsList.$save(word)")
-					.col-sm-1.col-xs-1.text-right
-						button.btn.btn-default.btn-fab.btn-fab-mini(ng-click="vm.wordsList.$remove(word)")
-							i.fa.fa-times(aria-hidden="true")
+.common-container-wr
+	.container
+		.panel
+			form(ng-submit="vm.addNewWord()")
+				.panel-body
+					.row
+						.col-sm-6.col-xs-6
+							.form-group
+								input.form-control(type="text" ng-model="vm.newWord" placeholder="Word" name="word" required)
+						.col-sm-6.col-xs-6
+							.form-group
+								input.form-control(type="text" ng-model="vm.newWordTranslation" placeholder="Translation" name="translation" required)
+				.panel-footer
+					.row
+						.col-sm-12.col-xs-12.text-right
+							button.btn.btn-raised.btn-success(type="submit") Add
+		.panel(ng-show="vm.wordsList.length")
+			.panel-body
+				.list-group
+					.list-group-item(ng-repeat="word in vm.wordsList | orderBy:reverse:true")
+						.row
+							.col-sm-5.col-xs-5
+								.form-group
+									input.form-control(type="text" ng-model="word.word" ng-change="vm.wordsList.$save(word)")
+							.col-sm-6.col-xs-6
+								.form-group
+									input.form-control(type="text" ng-model="word.translation" ng-change="vm.wordsList.$save(word)")
+							.col-sm-1.col-xs-1.text-right
+								button.btn.btn-default.btn-fab.btn-fab-mini(ng-click="vm.wordsList.$remove(word)")
+									i.fa.fa-times(aria-hidden="true")

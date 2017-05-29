@@ -16,13 +16,7 @@
 
 <body ng-cloak ng-app="further">
 	<div ng-include="'app/layout/navbar.html'"></div>
-	<main>
-		<div class="container" ui-view></div>
-	</main>
-	<footer>
-		<div class="container">©
-			<a class="footer_link" href="https://www.linkedin.com/in/serjyamp" target="_blank">Serhii Yampolskyi</a>, 2017. All rights reserved.</div>
-	</footer>
+	<main ui-view></main>
 	<script src="vendor/jquery/jquery.min.js"></script>
 	<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
 	<script src="vendor/bootstrap-material-design/material.min.js"></script>
