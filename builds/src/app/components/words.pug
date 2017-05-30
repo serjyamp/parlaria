@@ -6,7 +6,7 @@
 					.row
 						.col-sm-6.col-xs-6
 							.form-group
-								input.form-control(type="text" ng-model="vm.newWord" placeholder="Word" name="word" required)
+								input.form-control(type="text" ng-model="vm.newWord" placeholder="English word" name="word" required)
 						.col-sm-6.col-xs-6
 							.form-group
 								input.form-control(type="text" ng-model="vm.newWordTranslation" placeholder="Translation" name="translation" required)
@@ -21,10 +21,10 @@
 						.row
 							.col-sm-5.col-xs-5
 								.form-group
-									input.form-control(type="text" ng-model="word.word" ng-change="vm.wordsList.$save(word)")
+									input.form-control(type="text" ng-model="word.word" ng-change="vm.wordsList.$save(word)" placeholder="English word")
 							.col-sm-6.col-xs-6
 								.form-group
-									input.form-control(type="text" ng-model="word.translation" ng-change="vm.wordsList.$save(word)")
+									input.form-control(type="text" ng-model="word.translation" ng-change="vm.wordsList.$save(word)" placeholder="Translation")
 							.col-sm-1.col-xs-1.text-right
 								button.btn.btn-default.btn-fab.btn-fab-mini(ng-click="vm.wordsList.$remove(word)")
 									i.fa.fa-times(aria-hidden="true")
