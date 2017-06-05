@@ -2,6 +2,33 @@
 	<div class="container">
 		<div class="panel" ng-show="vm.wordsList.length">
 			<div class="panel-heading">How many
+				<strong>words</strong> will I know and
+				<strong>when</strong>?</div>
+			<div class="panel-body">
+				<div class="i-want">
+					<input class="form-control" type="number" ng-model="vm.numberOfWordsToKnow" placeholder="Number of words I want to know" ng-change="vm.makeForecast(vm.wordsList, vm.wordsList.length)" />
+				</div>
+				<div class="progress progress-striped active progress-words">
+					<div class="progress-bar progress-bar-info" style="width: {{vm.progressValue}};">
+						<span ng-show="vm.progressValue">{{vm.progressValue}}</span>
+					</div>
+				</div>
+				<div class="row progress-bar-labels">
+					<div class="progress-bar-label">I know
+						<strong>{{vm.wordsList.length}}</strong>
+						<span ng-show="vm.numberOfWordsToKnow &gt; vm.wordsList.length"> of
+							<strong>{{vm.numberOfWordsToKnow}}</strong>.
+							<span>The rest words I will have learnt by
+								<span>
+									<strong>{{vm.forecastDate}}</strong>.</span>
+							</span>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel" ng-show="vm.wordsList.length">
+			<div class="panel-heading">How many
 				<strong>words</strong> I've learnt</div>
 			<div class="panel-body">
 				<div class="col-sm-9 col-xs-9">

@@ -15,7 +15,7 @@ function PhrasesCtrl(fire, $rootScope, AuthFactory) {
             if (month < 10) {
                 month = '0' + month;
             }
-            var created = date.getDate() + '.' + month + '.' + date.getFullYear();
+            var created = month + '/' + date.getDate() + '/' + date.getFullYear();
 
             if (fire.addNewPhrase(vm.newPhrase, vm.newPhraseDescription, created)){
                 vm.newPhrase = '';

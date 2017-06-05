@@ -4,6 +4,32 @@
 			.panel-heading
 				| How many 
 				strong words
+				|  will I know and 
+				strong when
+				| ?
+			.panel-body
+				.i-want
+					input.form-control(type="number" ng-model="vm.numberOfWordsToKnow" placeholder="Number of words I want to know" ng-change="vm.makeForecast(vm.wordsList, vm.wordsList.length)")
+				.progress.progress-striped.active.progress-words
+					.progress-bar.progress-bar-info(style="width: {{vm.progressValue}}")
+						span(ng-show="vm.progressValue") {{vm.progressValue}}
+				.row.progress-bar-labels
+					.progress-bar-label
+						| I know 
+						strong {{vm.wordsList.length}}
+						span(ng-show="vm.numberOfWordsToKnow > vm.wordsList.length")
+							|  of 
+							strong {{vm.numberOfWordsToKnow}}
+							| .
+							span
+								| The rest words I will have learnt by 
+								span
+									strong {{vm.forecastDate}}
+									| .
+		.panel(ng-show="vm.wordsList.length")
+			.panel-heading
+				| How many 
+				strong words
 				|  I've learnt
 			.panel-body
 				.col-sm-9.col-xs-9

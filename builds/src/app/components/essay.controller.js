@@ -24,10 +24,14 @@ function EssayCtrl(fire, $rootScope, AuthFactory) {
     vm.addNewEssay = function() {
         var date = new Date();
         var month = date.getMonth() + 1;
+        var day = date.getDate();
         if (month < 10) {
             month = '0' + month;
         }
-        var created = date.getDate() + '.' + month + '.' + date.getFullYear();
+        if (day < 10) {
+            day = '0' + day;
+        }
+        var created = day + '.' + month + '.' + date.getFullYear();
 
         if (vm.essayName && vm.essayText) {
             if (fire.addNewEssay(vm.essayName, vm.essayText, created)) {
@@ -44,11 +48,11 @@ function EssayCtrl(fire, $rootScope, AuthFactory) {
 
     vm.saveCurrentEssay = function(essay) {
         if (essay.essayName && essay.essayText) {
-            vm.essaysList.$save(essay).then({}, function(){
+            vm.essaysList.$save(essay).then({}, function() {
                 vm.essayCurrentNotSavedErrorMsg = true;
                 vm.essayCurrentEmptyErrorMsg = false;
             });
-        } else{
+        } else {
             vm.essayCurrentNotSavedErrorMsg = false;
             vm.essayCurrentEmptyErrorMsg = true;
         }

@@ -22,13 +22,6 @@ html {
     background: $c_blue !important;
 }
 
-main {
-    // min-height: 100vh;
-    // height: auto;
-    // margin: 0 auto -50px;
-    // padding: 100px 0;
-}
-
 .main-start {
     width: 100%;
     min-height: 100vh;
@@ -154,4 +147,14 @@ footer {
 
 .nav i{
     margin-right: 5px;
+}
+
+.progress-words{
+    height: 19px;
+}
+.i-want{
+    margin-bottom: 25px;
+}
+.progress{
+    margin-bottom: 10px;
 }

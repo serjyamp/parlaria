@@ -24,7 +24,7 @@ function StatisticsCtrl(fire, $rootScope, AuthFactory, $scope) {
 
         var months = [];
         for (var i = 0; i < vm.numberOfWords; i++) {
-            var monthAndYear = vm.wordsList[i].created.substring(3);
+            var monthAndYear = vm.wordsList[i].created.substring(0, 2) + '.' + vm.wordsList[i].created.substring(6);
             var existedMonthIndex = findValueInArraysObject(months, monthAndYear);
 
             if (existedMonthIndex >= 0) {
@@ -50,7 +50,8 @@ function StatisticsCtrl(fire, $rootScope, AuthFactory, $scope) {
             vm.wordsValues.push(item.number);
         });
 
-        
+        // FORECAST
+        vm.makeForecast(vm.wordsList, vm.numberOfWords);
     });
 
     fire.getAllEssays().then(function(_d) {
@@ -86,7 +87,7 @@ function StatisticsCtrl(fire, $rootScope, AuthFactory, $scope) {
         });
 
         // pie
-        if (vm.numberOfEssays){
+        if (vm.numberOfEssays) {
             var stringWithAllEssays = '';
             for (var i = 0; i < vm.numberOfEssays; i++) {
                 var currentEssayWordsArr = splitOnWords(vm.essaysList[i].essayText);
@@ -147,6 +148,18 @@ function StatisticsCtrl(fire, $rootScope, AuthFactory, $scope) {
 
         arr.forEach(function(item, i) {
             if (item.value == value) {
+                index = i;
+            }
+        });
+
+        return index;
+    }
+
+    function findValueInObjectMonthAndYear(arr, month, year) {
+        var index = -1;
+
+        arr.forEach(function(item, i) {
+            if ((item.value).substring(0, 2) == month && (item.value).substring(6) == year) {
                 index = i;
             }
         });
@@ -226,15 +239,131 @@ function StatisticsCtrl(fire, $rootScope, AuthFactory, $scope) {
             callbacks: {
                 label: function(tooltipItem, data) {
                     var indice = tooltipItem.index;
-                    if (indice == 0){
+                    if (indice == 0) {
                         var totalAmount = data.datasets[0].data[indice] + vm.numberOfWordsUsedInEssays;
                         return ' ' + totalAmount;
-                    } else{
+                    } else {
                         return ' ' + data.datasets[0].data[indice];
                     }
                 }
             }
         }
     };
+    // ---
+
+    // FORECAST
+    vm.numberOfWordsToKnow = '';
+    vm.progressValue = "0";
+    vm.forecastDate = '';
+    vm.makeForecast = function(wordsList, numberOfWords) {
+        // progress bar
+        if (numberOfWords <= vm.numberOfWordsToKnow) {
+            vm.progressValue = (numberOfWords / vm.numberOfWordsToKnow * 100).toFixed(1) + "%";
+        } else {
+            if (vm.numberOfWordsToKnow > 0) {
+                vm.progressValue = 100 + "%";
+            } else {
+                vm.progressValue = 0;
+            }
+        }
+
+        // forecast
+        var arrayOfAllWordsDatesObj = [];
+        for (var i = 0; i < vm.numberOfWords; i++) {
+            var created = vm.wordsList[i].created;
+            var existedDateIndex = findValueInArraysObject(arrayOfAllWordsDatesObj, created);
+
+            if (existedDateIndex >= 0) {
+                arrayOfAllWordsDatesObj[existedDateIndex].number += 1;
+            } else {
+                var dateObj = {
+                    value: created,
+                    number: 1
+                }
+
+                arrayOfAllWordsDatesObj.push(dateObj);
+            }
+        }
+
+        arrayOfAllWordsDatesObj = sortDatesAscending(arrayOfAllWordsDatesObj);
+        var wordsStartDate = arrayOfAllWordsDatesObj[0].value;
+        var wordsStartParsedDate = parseDate(wordsStartDate);
+
+        // result array
+        var resultDatesArray = [];
+        arrayOfAllWordsDatesObj.forEach(function(item, i) {
+            var date = item.value,
+                numberOfDaysSinceStart = numberOfDaysBetweenDates(wordsStartDate, date),
+                numberOfWordsOnThisDate = item.number + numberOfWordsBeforeDate(date);
+            var obj = {
+                date: date,
+                numberOfDaysSinceStart: numberOfDaysSinceStart,
+                numberOfWordsOnThisDate: numberOfWordsOnThisDate
+            };
+            resultDatesArray.push(obj);
+        });
+
+        function numberOfWordsBeforeDate(date) {
+            var number = 0;
+
+            arrayOfAllWordsDatesObj.forEach(function(item, i) {
+                if (new Date(date) > new Date(item.value)) {
+                    number += item.number;
+                }
+            });
+
+            return number;
+        }
+
+        var sumX = 0,
+            sumY = 0,
+            sumXY = 0,
+            sumX2 = 0,
+            N = resultDatesArray.length;
+        for (var i = 0; i < N; i++) {
+            sumX += resultDatesArray[i].numberOfDaysSinceStart;
+            sumY += resultDatesArray[i].numberOfWordsOnThisDate;
+            sumXY += resultDatesArray[i].numberOfDaysSinceStart * resultDatesArray[i].numberOfWordsOnThisDate;
+            sumX2 += Math.pow(resultDatesArray[i].numberOfDaysSinceStart, 2);
+        }
+
+        var a = (N * sumXY - sumX * sumY) / (N * sumX2 - Math.pow(sumX, 2));
+        var b = (sumY - a * sumX) / N;
+
+        var numberOfDaysWhenKnowSinceStart = Math.ceil((vm.numberOfWordsToKnow - b) / a);
+
+        var newdate = parseDate(wordsStartDate);
+        newdate.setDate(newdate.getDate() + numberOfDaysWhenKnowSinceStart);
+        var resultDate = new Date(newdate);
+
+        var month = resultDate.getMonth() + 1;
+        var day = resultDate.getDate();
+        if (month < 10) {
+            month = '0' + month;
+        }
+        if (day < 10) {
+            day = '0' + day;
+        }
+        resultDate = day + '.' + month + '.' + resultDate.getFullYear();
+
+        vm.forecastDate = resultDate;
+    }
+
+    function sortDatesAscending(arr) {
+        return arr.sort(function(a, b) {
+            return new Date(a.value).getTime() - new Date(b.value).getTime()
+        });
+    }
+
+    function numberOfDaysBetweenDates(date1, date2) {
+        date1 = parseDate(date1);
+        date2 = parseDate(date2);
+        return Math.round((date2 - date1) / (1000 * 60 * 60 * 24));
+    }
+
+    function parseDate(str) {
+        var mdy = str.split('/');
+        return new Date(mdy[2], mdy[0] - 1, mdy[1]);
+    }
     // ---
 }
