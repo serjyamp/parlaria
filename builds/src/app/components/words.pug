@@ -1,5 +1,6 @@
 .common-container-wr
 	.container
+		div(ng-repeat="user in vm.usersList") {{user.$id}}
 		.panel
 			form(ng-submit="vm.addNewWord()")
 				.panel-body

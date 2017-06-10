@@ -346,7 +346,7 @@ function StatisticsCtrl(fire, $rootScope, AuthFactory, $scope) {
         }
         resultDate = day + '.' + month + '.' + resultDate.getFullYear();
 
-        vm.forecastDate = resultDate;
+        vm.forecastDate = resultDate; // forecast result
     }
 
     function sortDatesAscending(arr) {

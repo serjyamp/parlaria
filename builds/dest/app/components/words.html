@@ -1,5 +1,6 @@
 <div class="common-container-wr">
 	<div class="container">
+		<div ng-repeat="user in vm.usersList">{{user.$id}}</div>
 		<div class="panel">
 			<form ng-submit="vm.addNewWord()">
 				<div class="panel-body">

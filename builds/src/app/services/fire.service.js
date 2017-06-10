@@ -20,6 +20,12 @@ function fire($log, $firebaseObject, $firebaseArray, $rootScope, AuthFactory) {
     var ref = firebase.database().ref();
     var uid = vm.auth.authVar.$getAuth().uid;
 
+    // USERS
+    var allUsers = $firebaseArray(ref);
+    vm.getAllUsers = function(cb){
+        return allUsers.$loaded(cb);
+    }
+    
     // WORDS
     var wordsRef = ref.child(uid + '/words');
     var allWords = $firebaseArray(wordsRef);

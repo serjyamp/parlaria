@@ -1,11 +1,11 @@
 
 NavbarCtrl.$inject = ["$rootScope", "$state", "AuthFactory", "$location", "$window"];
+AuthFactory.$inject = ["$firebaseAuth"];
+fire.$inject = ["$log", "$firebaseObject", "$firebaseArray", "$rootScope", "AuthFactory"];
 EssayCtrl.$inject = ["fire", "$rootScope", "AuthFactory"];
 PhrasesCtrl.$inject = ["fire", "$rootScope", "AuthFactory"];
 StatisticsCtrl.$inject = ["fire", "$rootScope", "AuthFactory", "$scope"];
-WordsCtrl.$inject = ["fire", "$rootScope", "AuthFactory"];
-AuthFactory.$inject = ["$firebaseAuth"];
-fire.$inject = ["$log", "$firebaseObject", "$firebaseArray", "$rootScope", "AuthFactory"];$.material.init();
+WordsCtrl.$inject = ["fire", "$rootScope", "AuthFactory"];$.material.init();
 
 angular
     .module('further', [
@@ -86,6 +86,120 @@ function NavbarCtrl($rootScope, $state, AuthFactory, $location, $window) {
     };
 
     vm.photoURL = null;
+}
+
+angular
+    .module("further.auth.factory", ["firebase"])
+    .factory("AuthFactory", AuthFactory);
+
+function AuthFactory($firebaseAuth) {
+    var auth = $firebaseAuth();
+
+    var service = {
+    	authVar: auth,
+        signIn: signIn,
+        signOut: signOut
+    };
+
+    function signIn() {
+        return auth.$signInWithPopup('google');
+    }
+
+    function signOut() {
+        return auth.$signOut();
+    }
+
+    return service;
+}
+
+// Initialize Firebase
+var config = {
+    apiKey: "AIzaSyCEzgvtuQYnoz3JbmlIkJoSRPiDuXJrTwQ",
+    authDomain: "parlaria-9a874.firebaseapp.com",
+    databaseURL: "https://parlaria-9a874.firebaseio.com",
+    projectId: "parlaria-9a874",
+    storageBucket: "parlaria-9a874.appspot.com",
+    messagingSenderId: "630755092176"
+};
+firebase.initializeApp(config);
+
+angular
+    .module('further.fire.service', ['firebase'])
+    .service('fire', fire);
+
+function fire($log, $firebaseObject, $firebaseArray, $rootScope, AuthFactory) {
+    var vm = this;
+    vm.auth = AuthFactory;
+
+    var ref = firebase.database().ref();
+    var uid = vm.auth.authVar.$getAuth().uid;
+
+    // USERS
+    var allUsers = $firebaseArray(ref);
+    vm.getAllUsers = function(cb){
+        return allUsers.$loaded(cb);
+    }
+    
+    // WORDS
+    var wordsRef = ref.child(uid + '/words');
+    var allWords = $firebaseArray(wordsRef);
+
+    vm.getAllWords = function(cb) {
+        return allWords.$loaded(cb);
+    };
+    vm.addNewWord = function(word, translation, created) {
+        var duplicate = false;
+        angular.forEach(allWords, function(value, key) {
+            if (value.word == word) {
+                duplicate = true;
+                return;
+            }
+        });
+
+        if (!duplicate) {
+            var obj = {
+                word: word,
+                translation: translation,
+                created: created
+            };
+
+            return allWords.$add(obj);
+        }
+
+        return false;
+    };
+
+    // ESSAY
+    var essayRef = ref.child(uid + '/essay');
+    var allEssays = $firebaseArray(essayRef);
+    vm.addNewEssay = function(essayName, essayText, created) {
+        var obj = {
+            essayName: essayName,
+            essayText: essayText,
+            created: created
+        };
+
+        return allEssays.$add(obj);
+    };
+    vm.getAllEssays = function(cb) {
+        return allEssays.$loaded(cb);
+    };
+
+    // PHRASES
+    var phrasesRef = ref.child(uid + '/phrases');
+    var allPhrases = $firebaseArray(phrasesRef);
+    vm.addNewPhrase = function(phrase, description, created) {
+        var obj = {
+            phrase: phrase,
+            description: description,
+            created: created
+        };
+
+        return allPhrases.$add(obj);
+    };
+    vm.getAllPhrases = function(cb) {
+        return allPhrases.$loaded(cb);
+    };
 }
 
 angular.module('further.Essay', [])
@@ -573,7 +687,7 @@ function StatisticsCtrl(fire, $rootScope, AuthFactory, $scope) {
         }
         resultDate = day + '.' + month + '.' + resultDate.getFullYear();
 
-        vm.forecastDate = resultDate;
+        vm.forecastDate = resultDate; // forecast result
     }
 
     function sortDatesAscending(arr) {
@@ -604,6 +718,7 @@ function WordsCtrl(fire, $rootScope, AuthFactory) {
     vm.newWord = null;
     vm.newWordTranslation = null;
     vm.wordsList = [];
+    vm.usersList = [];
 
     vm.addNewWord = function() {
         if (vm.newWord && vm.newWordTranslation) {
@@ -628,112 +743,213 @@ function WordsCtrl(fire, $rootScope, AuthFactory) {
     fire.getAllWords().then(function(_d) {
         vm.wordsList = _d;
     });
-}
 
-angular
-    .module("further.auth.factory", ["firebase"])
-    .factory("AuthFactory", AuthFactory);
+    // RECOMMENDATIONS
+    fire.getAllUsers().then(function(_d) {
+        vm.usersList = _d;
+    });
 
-function AuthFactory($firebaseAuth) {
-    var auth = $firebaseAuth();
+    var customers = [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+    ];
+    var items = [{
+        id: 1,
+        name: 'hammer'
+    }, {
+        id: 2,
+        name: 'bumf'
+    }, {
+        id: 3,
+        name: 'Snickers'
+    }, {
+        id: 4,
+        name: 'screwdriver'
+    }, {
+        id: 5,
+        name: 'pen'
+    }, {
+        id: 6,
+        name: 'Kit-Kat'
+    }, {
+        id: 7,
+        name: 'spanner'
+    }, {
+        id: 8,
+        name: 'pencil'
+    }, {
+        id: 9,
+        name: 'candys Health Bar'
+    }, {
+        id: 10,
+        name: 'tape counter'
+    }, {
+        id: 11,
+        name: 'binding machine'
+    }];
+    var payments = [{
+            id: 1,
+            customerID: 1,
+            itemID: 6
+        }, {
+            id: 2,
+            customerID: 1,
+            itemID: 9
+        }, {
+            id: 3,
+            customerID: 2,
+            itemID: 2
+        }, {
+            id: 4,
+            customerID: 2,
+            itemID: 8
+        }, {
+            id: 5,
+            customerID: 3,
+            itemID: 4
+        }, {
+            id: 6,
+            customerID: 3,
+            itemID: 7
+        }, {
+            id: 7,
+            customerID: 3,
+            itemID: 10
+        }, {
+            id: 8,
+            customerID: 4,
+            itemID: 5
+        }, {
+            id: 9,
+            customerID: 4,
+            itemID: 8
+        }, {
+            id: 10,
+            customerID: 4,
+            itemID: 11
+        }, {
+            id: 11,
+            customerID: 5,
+            itemID: 1
+        }, {
+            id: 12,
+            customerID: 5,
+            itemID: 4
+        }, {
+            id: 13,
+            customerID: 5,
+            itemID: 10
+        }, {
+            id: 14,
+            customerID: 6,
+            itemID: 5
+        }, {
+            id: 15,
+            customerID: 6,
+            itemID: 11
+        }, {
+            id: 16,
+            customerID: 7,
+            itemID: 1
+        }, {
+            id: 17,
+            customerID: 7,
+            itemID: 4
+        }, {
+            id: 18,
+            customerID: 8,
+            itemID: 3
+        }, {
+            id: 19,
+            customerID: 8,
+            itemID: 9
+        }
+        // {
+        //     id: 20,
+        //     customerID: 2,
+        //     itemID: 11
+        // }
+    ]
 
-    var service = {
-    	authVar: auth,
-        signIn: signIn,
-        signOut: signOut
-    };
+    var d = items.length;
+    var E = getAllBuyingsOfParticularCustomer(payments, 1)
+    var llEll = E.length;
+    var Pi = [];
+    var PiE = findCoincidences(1, payments);
+    var Beta = 1;
 
-    function signIn() {
-        return auth.$signInWithPopup('google');
+    // calculate Pi
+    customers.forEach(function(item, i) {
+        var itemsOfThisCustomer = getAllBuyingsOfParticularCustomer(payments, item);
+        var obj = {
+            customerID: item,
+            itemCount: itemsOfThisCustomer.length
+        }
+        Pi.push(obj);
+    });
+
+    function getAllBuyingsOfParticularCustomer(payments, customerID) {
+        var result = [];
+
+        payments.forEach(function(item, i) {
+            if (item.customerID == customerID) {
+                result.push(item.itemID)
+            }
+        });
+
+        return result;
     }
 
-    function signOut() {
-        return auth.$signOut();
+    function findCoincidences(customerID, payments) {
+        var result = [];
+
+        customers.forEach(function(item, i) {
+            if (item != customerID) {
+                var anotherCustomerBuyings = getAllBuyingsOfParticularCustomer(payments, item);
+                var howManyCoincidences = 0;
+
+                anotherCustomerBuyings.forEach(function(itemID) {
+                    if (isElementInArray(itemID, E)) {
+                        howManyCoincidences++;
+                    }
+                });
+                if (howManyCoincidences) {
+                    var obj = {
+                        customerID: item,
+                        itemCount: howManyCoincidences
+                    }
+                    result.push(obj);
+                }
+            } else {
+                var obj = {
+                    customerID: item,
+                    itemCount: llEll
+                }
+                result.unshift(obj);
+            }
+        });
+
+        return result;
     }
 
-    return service;
-}
+    function isElementInArray(element, array) {
+        var result = false;
 
-// Initialize Firebase
-var config = {
-    apiKey: "AIzaSyCEzgvtuQYnoz3JbmlIkJoSRPiDuXJrTwQ",
-    authDomain: "parlaria-9a874.firebaseapp.com",
-    databaseURL: "https://parlaria-9a874.firebaseio.com",
-    projectId: "parlaria-9a874",
-    storageBucket: "parlaria-9a874.appspot.com",
-    messagingSenderId: "630755092176"
-};
-firebase.initializeApp(config);
-
-angular
-    .module('further.fire.service', ['firebase'])
-    .service('fire', fire);
-
-function fire($log, $firebaseObject, $firebaseArray, $rootScope, AuthFactory) {
-    var vm = this;
-    vm.auth = AuthFactory;
-
-    var ref = firebase.database().ref();
-    var uid = vm.auth.authVar.$getAuth().uid;
-
-    // WORDS
-    var wordsRef = ref.child(uid + '/words');
-    var allWords = $firebaseArray(wordsRef);
-
-    vm.getAllWords = function(cb) {
-        return allWords.$loaded(cb);
-    };
-    vm.addNewWord = function(word, translation, created) {
-        var duplicate = false;
-        angular.forEach(allWords, function(value, key) {
-            if (value.word == word) {
-                duplicate = true;
+        array.forEach(function(item) {
+            if (element == item) {
+                result = true;
                 return;
             }
         });
 
-        if (!duplicate) {
-            var obj = {
-                word: word,
-                translation: translation,
-                created: created
-            };
+        return result;
+    }
 
-            return allWords.$add(obj);
-        }
-
-        return false;
-    };
-
-    // ESSAY
-    var essayRef = ref.child(uid + '/essay');
-    var allEssays = $firebaseArray(essayRef);
-    vm.addNewEssay = function(essayName, essayText, created) {
-        var obj = {
-            essayName: essayName,
-            essayText: essayText,
-            created: created
-        };
-
-        return allEssays.$add(obj);
-    };
-    vm.getAllEssays = function(cb) {
-        return allEssays.$loaded(cb);
-    };
-
-    // PHRASES
-    var phrasesRef = ref.child(uid + '/phrases');
-    var allPhrases = $firebaseArray(phrasesRef);
-    vm.addNewPhrase = function(phrase, description, created) {
-        var obj = {
-            phrase: phrase,
-            description: description,
-            created: created
-        };
-
-        return allPhrases.$add(obj);
-    };
-    vm.getAllPhrases = function(cb) {
-        return allPhrases.$loaded(cb);
-    };
+    // ---/
 }
