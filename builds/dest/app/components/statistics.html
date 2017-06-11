@@ -1,10 +1,13 @@
 <div class="common-container-wr">
 	<div class="container">
-		<div class="panel" ng-show="vm.wordsList.length">
+		<div class="panel">
 			<div class="panel-heading">How many
 				<strong>words</strong> will I know and
 				<strong>when</strong>?</div>
-			<div class="panel-body">
+			<div class="panel-body" ng-show="!vm.isAbleToMakeForecast">Unable to make a forecast. It is needed to have
+				<strong>words in a dictionary</strong> and they must be added at least
+				<strong>in two different days</strong>.</div>
+			<div class="panel-body" ng-show="vm.isAbleToMakeForecast">
 				<div class="i-want">
 					<input class="form-control" type="number" ng-model="vm.numberOfWordsToKnow" placeholder="Number of words I want to know" ng-change="vm.makeForecast(vm.wordsList, vm.wordsList.length)" />
 				</div>

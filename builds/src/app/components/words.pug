@@ -1,8 +1,7 @@
 .common-container-wr
 	.container
-		div(ng-repeat="user in vm.usersList") {{user.$id}}
 		.panel
-			form(ng-submit="vm.addNewWord()")
+			form(ng-submit="vm.addNewWord(vm.newWord, vm.newWordTranslation)")
 				.panel-body
 					.row
 						.col-sm-6.col-xs-6
@@ -15,7 +14,21 @@
 					.row
 						.col-sm-12.col-xs-12.text-right
 							button.btn.btn-raised.btn-success(type="submit") Add
+		.panel(ng-show="vm.recommendations.length")
+			.panel-heading Recommendations
+			.panel-body
+				.row(ng-repeat="r in vm.recommendations")
+					.col-sm-5.col-xs-5
+						.form-group
+							input.form-control(type="text" ng-model="r.word" placeholder="Foreign word" readonly)
+					.col-sm-6.col-xs-6
+						.form-group
+							input.form-control(type="text" ng-model="r.translation" placeholder="Translation" readonly)
+					.col-sm-1.col-xs-1.text-right
+						button.btn.btn-success.btn-fab.btn-fab-mini(ng-click="vm.addNewWord(r.word, r.translation, 1)")
+							i.fa.fa-plus(aria-hidden="true")
 		.panel(ng-show="vm.wordsList.length")
+			.panel-heading My dictionary
 			.panel-body
 				.list-group
 					.list-group-item(ng-repeat="word in vm.wordsList | orderBy:reverse:true")
@@ -27,5 +40,5 @@
 								.form-group
 									input.form-control(type="text" ng-model="word.translation" ng-change="vm.wordsList.$save(word)" placeholder="Translation")
 							.col-sm-1.col-xs-1.text-right
-								button.btn.btn-default.btn-fab.btn-fab-mini(ng-click="vm.wordsList.$remove(word)")
+								button.btn.btn-default.btn-fab.btn-fab-mini(ng-click="vm.removeWord(word)")
 									i.fa.fa-times(aria-hidden="true")

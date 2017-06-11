@@ -10,8 +10,8 @@ function WordsCtrl(fire, $rootScope, AuthFactory) {
 
     var uid = vm.auth.authVar.$getAuth().uid;
 
-    vm.addNewWord = function() {
-        if (vm.newWord && vm.newWordTranslation) {
+    vm.addNewWord = function(w, t, rec) {
+        if (w && t) {
             var date = new Date();
             var month = date.getMonth() + 1;
             var day = date.getDate();
@@ -23,300 +23,416 @@ function WordsCtrl(fire, $rootScope, AuthFactory) {
             }
             var created = month + '/' + day + '/' + date.getFullYear();
 
-            if (fire.addNewWord(vm.newWord, vm.newWordTranslation, created)) {
-                vm.newWord = null;
-                vm.newWordTranslation = null;
+            if (fire.addNewWord(w, t, created)) {
+                if (!rec) {
+                    vm.newWord = null;
+                    vm.newWordTranslation = null;
+                }
             }
+
+            recommendationsMain();
         }
     };
+
+    vm.removeWord = function(w){
+        vm.wordsList.$remove(w);
+        recommendationsMain();
+    }
 
     fire.getAllWords().then(function(_d) {
         vm.wordsList = _d;
     });
 
     // RECOMMENDATIONS
-    vm.usersList = [];
+    recommendationsMain();
 
-    fire.getAllUsers().then(function(_d) {
-        vm.usersList = _d;
+    function recommendationsMain() {
+        vm.usersList = [];
 
-        // recommendations
-        var uidAndWordsList = getWordsOfAllUsers(vm.usersList);
+        fire.getAllUsers().then(function(_d) {
+            vm.usersList = _d;
 
-        /* Структура данных ART1 для персонализации */
+            // recommendations
+            var uidAndWordsList = getWordsOfAllUsers(vm.usersList);
 
-        /* Строковые названия элементов векторов */
-        var itemName = collectAllWordsWithoutDuplicates(uidAndWordsList);
-        var MAX_ITEMS = itemName.length;
-        var MAX_CUSTOMERS = uidAndWordsList.length;
-        var TOTAL_PROTOTYPE_VECTORS = MAX_CUSTOMERS;
-        var beta = 1.0; /* Небольшое положительное целое */
-        var vigilance = 0.9; /* 0 <= внимательность < 1 */
-        var numPrototypeVectors = 0;
-        /* Количество векторов прототипов */
-        var prototypeVector = [];
-        /* Вектор суммирования для выдачи рекомендаций */
-        var sumVector = [];
-        /* Количество членов в кластерах */
-        var members = [];
-        /* Номер кластера, к которому принадлежит покупатель */
-        var membership = [];
+            /* Структура данных ART1 для персонализации */
 
-        /* Массив векторов признаков. Поля представляют слово, которое добавляет пользователь. Нуль – слово не добавлено */
+            /* Строковые названия элементов векторов */
+            var itemName = collectAllWordsWithoutDuplicates(uidAndWordsList).words;
+            var itemTranslations = collectAllWordsWithoutDuplicates(uidAndWordsList).translations;
+            var MAX_ITEMS = itemName.length;
+            var MAX_CUSTOMERS = uidAndWordsList.length;
+            var TOTAL_PROTOTYPE_VECTORS = MAX_CUSTOMERS;
+            var beta = 1.0; /* Небольшое положительное целое */
+            var vigilance = 0.9; /* 0 <= внимательность < 1 */
+            var numPrototypeVectors = 0;
+            /* Количество векторов прототипов */
+            var prototypeVector = [];
+            /* Вектор суммирования для выдачи рекомендаций */
+            var sumVector = [];
+            /* Количество членов в кластерах */
+            var members = [];
+            /* Номер кластера, к которому принадлежит пользователь */
+            var membership = [];
 
-        var database = generateVectorOfSigns(itemName, uidAndWordsList);
-        console.log(itemName)
-        console.log(database)
+            /* Массив векторов признаков. Поля представляют слово, которое добавляет пользователь. Нуль – слово не добавлено */
 
-        /* Инициализация структур данных алгоритма*/
+            var database = generateVectorOfSigns(itemName, uidAndWordsList);
 
-        function initialize() {
-            var i, j;
-            /* Очистка векторов прототипов */
-            for (i = 0; i < TOTAL_PROTOTYPE_VECTORS; i++) {
-                var zeros = [];
+            /* Инициализация структур данных алгоритма*/
+
+            function initialize() {
+                var i, j;
+                /* Очистка векторов прототипов */
+                for (i = 0; i < TOTAL_PROTOTYPE_VECTORS; i++) {
+                    var zeros = [];
+                    for (j = 0; j < MAX_ITEMS; j++) {
+                        zeros.push(0);
+                    }
+                    prototypeVector.push(zeros);
+                    sumVector.push(zeros);
+                    members[i] = 0;
+                }
+                /* Сброс значения принадлежности векторов к кластерам */
+                for (j = 0; j < MAX_CUSTOMERS; j++) {
+                    membership[j] = -1;
+                }
+            }
+
+
+
+            // Вспомогательные функции для алгоритма ART1
+            function vectorMagnitude(vector) {
+                var j, total = 0;
                 for (j = 0; j < MAX_ITEMS; j++) {
-                    zeros.push(0);
+                    if (vector[j] == 1) total++;
                 }
-                prototypeVector.push(zeros);
-                sumVector.push(zeros);
-                members[i] = 0;
+                return total;
             }
-            /* Сброс значения принадлежности векторов к кластерам */
-            for (j = 0; j < MAX_CUSTOMERS; j++) {
-                membership[j] = -1;
+
+
+
+            // Функции управления векторами:прототипами
+            function createNewPrototypeVector(example) {
+                var i, cluster;
+                for (cluster = 0; cluster < TOTAL_PROTOTYPE_VECTORS; cluster++) {
+                    if (members[cluster] == 0) break;
+                }
+                numPrototypeVectors = ++numPrototypeVectors;
+                for (i = 0; i < MAX_ITEMS; i++) {
+                    prototypeVector[cluster][i] = example[i];
+                }
+                members[cluster] = 1;
+                return cluster;
             }
-        }
 
-
-
-        // Вспомогательные функции для алгоритма ART1
-        function vectorMagnitude(vector) {
-            var j, total = 0;
-            for (j = 0; j < MAX_ITEMS; j++) {
-                if (vector[j] == 1) total++;
-            }
-            return total;
-        }
-
-
-
-        // Функции управления векторами:прототипами
-        function createNewPrototypeVector(example) {
-            var i, cluster;
-            for (cluster = 0; cluster < TOTAL_PROTOTYPE_VECTORS; cluster++) {
-                if (members[cluster] == 0) break;
-            }
-            numPrototypeVectors = ++numPrototypeVectors;
-            for (i = 0; i < MAX_ITEMS; i++) {
-                prototypeVector[cluster][i] = example[i];
-            }
-            members[cluster] = 1;
-            return cluster;
-        }
-
-        function updatePrototypeVectors(cluster) {
-            var item, customer, first = 1;
-            for (item = 0; item < MAX_ITEMS; item++) {
-                prototypeVector[cluster][item] = 0;
-                sumVector[cluster][item] = 0;
-            }
-            for (customer = 0; customer < MAX_CUSTOMERS; customer++) {
-                if (membership[customer] == cluster) {
-                    if (first) {
-                        for (item = 0; item < MAX_ITEMS; item++) {
-                            prototypeVector[cluster][item] = database[customer][item];
-                            sumVector[cluster][item] = database[customer][item];
-                        }
-                        first = 0;
-                    } else {
-                        for (item = 0; item < MAX_ITEMS; item++) {
-                            prototypeVector[cluster][item] = prototypeVector[cluster][item] & database[customer][item];
-                            sumVector[cluster][item] += database[customer][item];
+            function updatePrototypeVectors(cluster) {
+                var item, customer, first = 1;
+                for (item = 0; item < MAX_ITEMS; item++) {
+                    prototypeVector[cluster][item] = 0;
+                    sumVector[cluster][item] = 0;
+                }
+                for (customer = 0; customer < MAX_CUSTOMERS; customer++) {
+                    if (membership[customer] == cluster) {
+                        if (first) {
+                            for (item = 0; item < MAX_ITEMS; item++) {
+                                prototypeVector[cluster][item] = database[customer][item];
+                                sumVector[cluster][item] = database[customer][item];
+                            }
+                            first = 0;
+                        } else {
+                            for (item = 0; item < MAX_ITEMS; item++) {
+                                prototypeVector[cluster][item] = prototypeVector[cluster][item] & database[customer][item];
+                                sumVector[cluster][item] += database[customer][item];
+                            }
                         }
                     }
                 }
+                return;
             }
-            return;
-        }
 
-        // Алгоритм ART1
-        function performART1() {
-            var andresult = [];
-            var pvec, magPE, magP, magE;
-            var result, test;
-            var index, done = 0;
-            var count = 50;
-            while (!done) {
-                done = 1;
-                /* По всем покупателям */
-                for (index = 0; index < MAX_CUSTOMERS; index++) {
-                    /* Шаг 3 */
-                    for (pvec = 0; pvec < TOTAL_PROTOTYPE_VECTORS; pvec++) {
-                        /* Есть ли в этом кластере элементы? */
-                        if (members[pvec]) {
+            // Алгоритм ART1
+            function performART1() {
+                var andresult = [];
+                var pvec, magPE, magP, magE;
+                var result, test;
+                var index, done = 0;
+                var count = 50;
+                while (!done) {
+                    done = 1;
+                    /* По всем пользователям */
+                    for (index = 0; index < MAX_CUSTOMERS; index++) {
+                        /* Шаг 3 */
+                        for (pvec = 0; pvec < TOTAL_PROTOTYPE_VECTORS; pvec++) {
+                            /* Есть ли в этом кластере элементы? */
+                            if (members[pvec]) {
 
-                            // vectorBitwiseAnd function
-                            var v = database[index];
-                            var w = prototypeVector[pvec];
-                            for (var i = 0; i < MAX_ITEMS; i++) {
-                                andresult[i] = (v[i] & w[i]);
-                            }
-                            // ---/
+                                // vectorBitwiseAnd function
+                                var v = database[index];
+                                var w = prototypeVector[pvec];
+                                for (var i = 0; i < MAX_ITEMS; i++) {
+                                    andresult[i] = (v[i] & w[i]);
+                                }
+                                // ---/
 
-                            magPE = vectorMagnitude(andresult);
-                            magP = vectorMagnitude(prototypeVector[pvec]);
-                            magE = vectorMagnitude(database[index]);
-                            result = magPE / (beta + magP);
-                            test = magE / (beta + MAX_ITEMS);
-                            /* Выражение 3.2 */
-                            if (result > test) {
-                                /* Тест на внимательность / (Выражение 3.3) */
-                                if ((magPE / magE) < vigilance) {
-                                    var old;
-                                    /* Убедиться, что это другой кластер */
-                                    if (membership[index] != pvec) {
-                                        /* Переместить покупателя в другой кластер */
-                                        old = membership[index];
-                                        membership[index] = pvec;
-                                        if (old >= 0) {
-                                            members[old] = --members[old];
-                                            if (members[old] == 0) {
-                                                numPrototypeVectors = --numPrototypeVectors;
+                                magPE = vectorMagnitude(andresult);
+                                magP = vectorMagnitude(prototypeVector[pvec]);
+                                magE = vectorMagnitude(database[index]);
+                                result = magPE / (beta + magP);
+                                test = magE / (beta + MAX_ITEMS);
+                                /* Выражение 3.2 */
+                                if (result > test) {
+                                    /* Тест на внимательность / (Выражение 3.3) */
+                                    if ((magPE / magE) < vigilance) {
+                                        var old;
+                                        /* Убедиться, что это другой кластер */
+                                        if (membership[index] != pvec) {
+                                            /* Переместить пользователя в другой кластер */
+                                            old = membership[index];
+                                            membership[index] = pvec;
+                                            if (old >= 0) {
+                                                members[old] = --members[old];
+                                                if (members[old] == 0) {
+                                                    numPrototypeVectors = --numPrototypeVectors;
+                                                }
                                             }
+                                            members[pvec] = ++members[pvec];
+                                            /* Пересчитать векторы прототипы для всех кластеров */
+                                            if ((old >= 0) && (old < TOTAL_PROTOTYPE_VECTORS)) {
+                                                updatePrototypeVectors(old);
+                                            }
+                                            updatePrototypeVectors(pvec);
+                                            done = 0;
+                                            break;
+                                        } else {
+                                            /* Уже в этом кластере */
                                         }
-                                        members[pvec] = ++members[pvec];
-                                        /* Пересчитать векторы прототипы для всех кластеров */
-                                        if ((old >= 0) && (old < TOTAL_PROTOTYPE_VECTORS)) {
-                                            updatePrototypeVectors(old);
-                                        }
-                                        updatePrototypeVectors(pvec);
-                                        done = 0;
-                                        break;
-                                    } else {
-                                        /* Уже в этом кластере */
-                                    }
-                                } /* Тест на внимательность */
+                                    } /* Тест на внимательность */
+                                }
                             }
+                        } /* Цикл по векторам */
+                        /* Проверяем, обработан ли вектор */
+                        if (membership[index] == -1) {
+                            /* Не был найден подходящий кластер – создаем новый кластер для этого вектора признаков
+                             */
+                            membership[index] = createNewPrototypeVector(database[index]);
+                            done = 0;
                         }
-                    } /* Цикл по векторам */
-                    /* Проверяем, обработан ли вектор */
-                    if (membership[index] == -1) {
-                        /* Не был найден подходящий кластер – создаем новый кластер для этого вектора признаков
-                         */
-                        membership[index] = createNewPrototypeVector(database[index]);
-                        done = 0;
+                    } /* Цикл по пользователям */
+                    var k = --count;
+                    if (!k) break;
+                } /* Закончили */
+                return 0;
+            }
+
+            // Алгоритм рекомендации
+            function makeRecommendation(customer) {
+                var bestItem = -1;
+                var val = 0;
+                var item;
+                for (item = 0; item < MAX_ITEMS; item++) {
+                    if ((database[customer][item] == 0) && (sumVector[membership[customer]][item] > val)) {
+                        bestItem = item;
+                        val = sumVector[membership[customer]][item];
                     }
-                } /* Цикл по покупателям */
-                var k = --count;
-                if (!k) break;
-            } /* Закончили */
-            return 0;
-        }
-
-        // Алгоритм рекомендации
-        function makeRecommendation(customer) {
-            var bestItem = -1;
-            var val = 0;
-            var item;
-            for (item = 0; item < MAX_ITEMS; item++) {
-                if ((database[customer][item] == 0) && (sumVector[membership[customer]][item] > val)) {
-                    bestItem = item;
-                    val = sumVector[membership[customer]][item];
                 }
-            }
-            console.log("For Customer " + customer);
-            if (bestItem >= 0) {
-                console.log("The best recommendation is " + bestItem + " " + itemName[bestItem]);
-                console.log("Owned by " + sumVector[membership[customer]][bestItem] + " out of " + members[membership[customer]] + " members of this cluster");
-            } else {
-                console.log("No recommendation can be made.");
-            }
-            console.log("Already owns: ");
-            for (item = 0; item < MAX_ITEMS; item++) {
-                if (database[customer][item]) {
-                    console.log(itemName[item]);
-                }
-            }
-        }
 
-        var customer;
-        initialize();
-        performART1();
-        for (customer = 0; customer < MAX_CUSTOMERS; customer++) {
-            makeRecommendation(customer);
-        }
-    });
+                var result = [];
+                var r = null;
 
-    function generateVectorOfSigns(itemName, uidAndWordsList) {
-        var database = [];
-
-        uidAndWordsList.forEach(function(item, i) {
-            var currentArrayOfWords = item.words;
-
-            var databaseItemArr = [];
-            itemName.forEach(function(word) {
-                if (isElementInArray(word, currentArrayOfWords)) {
-                    databaseItemArr.push(1);
-                } else {
-                    databaseItemArr.push(0);
-                }
-            });
-
-            database.push(databaseItemArr);
-        });
-
-        return database;
-    }
-
-    function getWordsOfAllUsers(usersList) {
-        var uidAndWordsList = [];
-
-        usersList.forEach(function(item, i) {
-            var wordsOfCurrentUser = [];
-
-            if (item.words.length) {
-                Object.keys(item.words).map(function(objectKey, index) {
-                    wordsOfCurrentUser.push(item.words[objectKey]);
-                });
-                var words = [];
-
-                wordsOfCurrentUser.forEach(function(word) {
-                    if (!isElementInArray(word.word, words)) {
-                        words.push(word.word);
+                if (bestItem >= 0) {
+                    r = {
+                        word: itemName[bestItem],
+                        translation: itemTranslations[bestItem]
                     }
+                }
+
+                return makeOtherRecommendations(r, itemName, itemTranslations);
+            }
+
+            function makeOtherRecommendations(bestRecommendation, itemName, itemTranslations) {
+                var result = [];
+                vm.wordsList.forEach(function(item) {
+                    var w = item.word;
+                    if (isElementInArray(w, itemName)) {
+                        var indexToRemove = itemName.indexOf(w);
+
+                        itemName.splice(indexToRemove, 1);
+                        itemTranslations.splice(indexToRemove, 1);
+                    };
                 });
 
-                var obj = {
-                    id: item.$id,
-                    words: words
+                if (bestRecommendation) {
+                    var indexToRemove;
+                    var bestWord = bestRecommendation.word;
+                    itemName.forEach(function(item, i) {
+                        if (item == bestWord) {
+                            indexToRemove = i;
+                            return;
+                        }
+                    });
+                    itemName.splice(indexToRemove, 1);
+                    itemTranslations.splice(indexToRemove, 1);
+
+                    result.push(bestRecommendation);
                 }
 
-                if (item.$id == uid) {
-                    uidAndWordsList.unshift(obj);
-                } else {
-                    uidAndWordsList.push(obj);
-                }
+                if (itemName.length) {
+                    var otherWords = [];
+                    itemName.forEach(function(item, i) {
+                        var obj = {
+                            word: item,
+                            translation: itemTranslations[i]
+                        }
+                        otherWords.push(obj);
+                    });
+
+                    var minRandomIndex = 0;
+                    var maxRandomIndex = itemName.length - 1;
+                    var arrayOfRandomIndexes = [];
+                    var i = 5;
+                    if (bestRecommendation) {
+                        i = 4;
+                    }
+                    if (i > itemName.length) {
+                        i = itemName.length;
+                    }
+                    while (arrayOfRandomIndexes.length < i) {
+                        var rand = getRandomInt(minRandomIndex, maxRandomIndex);
+                        if (!isElementInArray(rand, arrayOfRandomIndexes)) {
+                            arrayOfRandomIndexes.push(rand);
+                        }
+                    }
+
+                    arrayOfRandomIndexes.forEach(function(item) {
+                        result.push(otherWords[item]);
+                    });
+                };
+
+                console.log('----------')
+                console.log(result)
+                return result;
             }
 
+            initialize();
+            performART1();
+
+            vm.recommendations = makeRecommendation(0);
         });
 
-        return uidAndWordsList;
-    }
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
 
-    function collectAllWordsWithoutDuplicates(uidAndWordsList) {
-        var result = [];
+        function generateVectorOfSigns(itemName, uidAndWordsList) {
+            var database = [];
 
-        uidAndWordsList.forEach(function(item) {
-            item.words.forEach(function(word, i) {
-                if (!isElementInArray(word, result)) {
-                    result.push(word);
-                }
+            uidAndWordsList.forEach(function(item, i) {
+                var currentArrayOfWords = item.words;
+
+                var databaseItemArr = [];
+                itemName.forEach(function(word) {
+                    if (isElementInArray(word, currentArrayOfWords)) {
+                        databaseItemArr.push(1);
+                    } else {
+                        databaseItemArr.push(0);
+                    }
+                });
+
+                database.push(databaseItemArr);
             });
-        });
 
-        return result;
+            return database;
+        }
+
+        function getWordsOfAllUsers(usersList) {
+            var uidAndWordsList = [];
+            usersList.forEach(function(item, i) {
+                var wordsOfCurrentUser = [];
+
+                if (item.words) {
+                    Object.keys(item.words).map(function(objectKey, index) {
+                        wordsOfCurrentUser.push(item.words[objectKey]);
+                    });
+                    var words = [];
+
+                    wordsOfCurrentUser.forEach(function(word) {
+                        var fl = false;
+
+                        words.forEach(function(wordObj) {
+                            if (wordObj.word == word.word) {
+                                fl = true;
+                                return;
+                            }
+                        });
+
+                        if (!fl) {
+                            var wt = {
+                                word: word.word,
+                                translation: word.translation
+                            }
+                            words.push(wt);
+                        }
+                    });
+
+                    var currentUserWordsArr = [];
+                    var currentUserTranslationsArr = [];
+
+                    words.forEach(function(w) {
+                        currentUserWordsArr.push(w.word);
+                        currentUserTranslationsArr.push(w.translation);
+                    });
+
+                    var obj = {
+                        id: item.$id,
+                        words: currentUserWordsArr,
+                        translations: currentUserTranslationsArr
+                    }
+
+                    if (item.$id == uid) {
+                        uidAndWordsList.unshift(obj);
+                    } else {
+                        uidAndWordsList.push(obj);
+                    }
+                }
+
+            });
+
+            return uidAndWordsList;
+        }
+
+        function collectAllWordsWithoutDuplicates(uidAndWordsList) {
+            var resultWords = [];
+            var resultTranslations = [];
+
+            uidAndWordsList.forEach(function(item) {
+                var wordsIDs = [];
+
+                item.words.forEach(function(word, i) {
+                    if (!isElementInArray(word, resultWords)) {
+                        resultWords.push(word);
+                        wordsIDs.push(i);
+                    }
+                });
+
+                wordsIDs.forEach(function(wordID) {
+                    item.translations.forEach(function(translation, i) {
+                        if (i == wordID) {
+                            resultTranslations.push(translation);
+                        }
+                    });
+                });
+            });
+
+            var result = {
+                words: resultWords,
+                translations: resultTranslations
+            };
+
+            return result;
+        }
     }
+    // --- end of recommendationsMain
 
     function isElementInArray(element, array) {
         var result = false;
@@ -330,12 +446,4 @@ function WordsCtrl(fire, $rootScope, AuthFactory) {
 
         return result;
     }
-
-
-
-
-
-
-
-    // ---/
 }

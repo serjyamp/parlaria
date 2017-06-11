@@ -6,6 +6,12 @@ html {
     min-height: 100vh;
 }
 
+.panel-heading{
+    font-weight: 400;
+    background-color: #3A7CA5 !important;
+    color: #FFF !important;
+}
+
 .navbar-brand {
     font-size: 33px;
     text-decoration: none;
@@ -67,16 +73,16 @@ footer {
 }
 
 .start__slogan {
-    font-size: 35px;
-    line-height: 35px;
-    font-family: 'Pacifico', cursive;
-    letter-spacing: 1px;
+    font-size: 40px;
+    line-height: 40px;
+    font-family: 'Pacifico';
+    letter-spacing: 1.3px;
     @include stroke(1,$c_black);
 }
 
 .start__cptn {
     // color: $c_black;
-    font-family: 'Pacifico', cursive;
+    font-family: 'Pacifico';
     font-size: 220px;
     line-height: 220px;
     margin-bottom: 35px;

@@ -255,6 +255,7 @@ function StatisticsCtrl(fire, $rootScope, AuthFactory, $scope) {
     vm.numberOfWordsToKnow = '';
     vm.progressValue = "0";
     vm.forecastDate = '';
+    vm.isAbleToMakeForecast = false;
     vm.makeForecast = function(wordsList, numberOfWords) {
         // progress bar
         if (numberOfWords <= vm.numberOfWordsToKnow) {
@@ -319,34 +320,44 @@ function StatisticsCtrl(fire, $rootScope, AuthFactory, $scope) {
             sumY = 0,
             sumXY = 0,
             sumX2 = 0,
-            N = resultDatesArray.length;
+            N = resultDatesArray.length,
+            fl = 0;
         for (var i = 0; i < N; i++) {
+            if (resultDatesArray[i].numberOfDaysSinceStart > 0){
+                fl++;
+            }
             sumX += resultDatesArray[i].numberOfDaysSinceStart;
             sumY += resultDatesArray[i].numberOfWordsOnThisDate;
             sumXY += resultDatesArray[i].numberOfDaysSinceStart * resultDatesArray[i].numberOfWordsOnThisDate;
             sumX2 += Math.pow(resultDatesArray[i].numberOfDaysSinceStart, 2);
         }
 
-        var a = (N * sumXY - sumX * sumY) / (N * sumX2 - Math.pow(sumX, 2));
-        var b = (sumY - a * sumX) / N;
+        if (fl){
+            var a = (N * sumXY - sumX * sumY) / (N * sumX2 - Math.pow(sumX, 2));
+            var b = (sumY - a * sumX) / N;
 
-        var numberOfDaysWhenKnowSinceStart = Math.ceil((vm.numberOfWordsToKnow - b) / a);
+            var numberOfDaysWhenKnowSinceStart = Math.ceil((vm.numberOfWordsToKnow - b) / a);
 
-        var newdate = parseDate(wordsStartDate);
-        newdate.setDate(newdate.getDate() + numberOfDaysWhenKnowSinceStart);
-        var resultDate = new Date(newdate);
+            var newdate = parseDate(wordsStartDate);
+            newdate.setDate(newdate.getDate() + numberOfDaysWhenKnowSinceStart);
+            var resultDate = new Date(newdate);
 
-        var month = resultDate.getMonth() + 1;
-        var day = resultDate.getDate();
-        if (month < 10) {
-            month = '0' + month;
+            var month = resultDate.getMonth() + 1;
+            var day = resultDate.getDate();
+            if (month < 10) {
+                month = '0' + month;
+            }
+            if (day < 10) {
+                day = '0' + day;
+            }
+            resultDate = day + '.' + month + '.' + resultDate.getFullYear();
+
+            vm.forecastDate = resultDate; // forecast result
+
+            vm.isAbleToMakeForecast = true;
+        } else{
+            vm.isAbleToMakeForecast = false;
         }
-        if (day < 10) {
-            day = '0' + day;
-        }
-        resultDate = day + '.' + month + '.' + resultDate.getFullYear();
-
-        vm.forecastDate = resultDate; // forecast result
     }
 
     function sortDatesAscending(arr) {

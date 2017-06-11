@@ -1,13 +1,19 @@
 .common-container-wr
 	.container
-		.panel(ng-show="vm.wordsList.length")
+		.panel
 			.panel-heading
 				| How many 
 				strong words
 				|  will I know and 
 				strong when
 				| ?
-			.panel-body
+			.panel-body(ng-show="!vm.isAbleToMakeForecast")
+				| Unable to make a forecast. It is needed to have 
+				strong words in a dictionary
+				|  and they must be added at least 
+				strong in two different days
+				| .
+			.panel-body(ng-show="vm.isAbleToMakeForecast")
 				.i-want
 					input.form-control(type="number" ng-model="vm.numberOfWordsToKnow" placeholder="Number of words I want to know" ng-change="vm.makeForecast(vm.wordsList, vm.wordsList.length)")
 				.progress.progress-striped.active.progress-words
