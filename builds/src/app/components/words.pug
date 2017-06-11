@@ -28,7 +28,7 @@
 						button.btn.btn-success.btn-fab.btn-fab-mini(ng-click="vm.addNewWord(r.word, r.translation, 1)")
 							i.fa.fa-plus(aria-hidden="true")
 		.panel(ng-show="vm.wordsList.length")
-			.panel-heading My dictionary
+			.panel-heading.panel-heading--styled Dictionary
 			.panel-body
 				.list-group
 					.list-group-item(ng-repeat="word in vm.wordsList | orderBy:reverse:true")

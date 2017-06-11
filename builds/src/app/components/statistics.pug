@@ -1,7 +1,7 @@
 .common-container-wr
 	.container
 		.panel
-			.panel-heading
+			.panel-heading.panel-heading--styled
 				| How many 
 				strong words
 				|  will I know and 
@@ -33,7 +33,7 @@
 									strong {{vm.forecastDate}}
 									| .
 		.panel(ng-show="vm.wordsList.length")
-			.panel-heading
+			.panel-heading.panel-heading--styled
 				| How many 
 				strong words
 				|  I've learnt
@@ -46,7 +46,7 @@
 					div.pie-wr(ng-show="vm.numberOfEssays")
 						canvas#pie.chart.chart-pie(chart-data='vm.pieData' chart-labels='vm.pieLabels' chart-options='optionsPie' height="350px")
 		.panel(ng-show="vm.essaysList.length")
-			.panel-heading
+			.panel-heading.panel-heading--styled
 				| How many 
 				strong essays
 				|  I've written

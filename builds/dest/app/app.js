@@ -1,9 +1,9 @@
 
-NavbarCtrl.$inject = ["$rootScope", "$state", "AuthFactory", "$location", "$window"];
 EssayCtrl.$inject = ["fire", "$rootScope", "AuthFactory"];
 PhrasesCtrl.$inject = ["fire", "$rootScope", "AuthFactory"];
 StatisticsCtrl.$inject = ["fire", "$rootScope", "AuthFactory", "$scope"];
 WordsCtrl.$inject = ["fire", "$rootScope", "AuthFactory"];
+NavbarCtrl.$inject = ["$rootScope", "$state", "AuthFactory", "$location", "$window"];
 AuthFactory.$inject = ["$firebaseAuth"];
 fire.$inject = ["$log", "$firebaseObject", "$firebaseArray", "$rootScope", "AuthFactory"];$.material.init();
 
@@ -56,36 +56,6 @@ function config($stateProvider, $urlRouterProvider, $locationProvider) {
             controller: 'StatisticsCtrl',
             controllerAs: 'vm'
         });
-}
-
-angular.module('further.Navbar', [])
-    .controller('NavbarCtrl', NavbarCtrl);
-
-function NavbarCtrl($rootScope, $state, AuthFactory, $location, $window) {
-    var vm = this;
-    vm.auth = AuthFactory;
-
-    vm.getTabName = function(){
-        return $location.hash().replace(/(^#\/|\/$)/g, '');
-    }
-
-    vm.auth.authVar.$onAuthStateChanged(function(firebaseUser) {
-        $rootScope.firebaseUser = firebaseUser;
-        if ($rootScope.firebaseUser) {
-            $state.go('words');
-        }
-    });
-
-    vm.signOut = function() {
-        vm.auth.signOut();
-        $state.go('/');
-        $window.location.reload();
-    };
-    vm.signIn = function() {
-        vm.auth.signIn();
-    };
-
-    vm.photoURL = null;
 }
 
 angular.module('further.Essay', [])
@@ -1054,6 +1024,36 @@ function WordsCtrl(fire, $rootScope, AuthFactory) {
 
         return result;
     }
+}
+
+angular.module('further.Navbar', [])
+    .controller('NavbarCtrl', NavbarCtrl);
+
+function NavbarCtrl($rootScope, $state, AuthFactory, $location, $window) {
+    var vm = this;
+    vm.auth = AuthFactory;
+
+    vm.getTabName = function(){
+        return $location.hash().replace(/(^#\/|\/$)/g, '');
+    }
+
+    vm.auth.authVar.$onAuthStateChanged(function(firebaseUser) {
+        $rootScope.firebaseUser = firebaseUser;
+        if ($rootScope.firebaseUser) {
+            $state.go('words');
+        }
+    });
+
+    vm.signOut = function() {
+        vm.auth.signOut();
+        $state.go('/');
+        $window.location.reload();
+    };
+    vm.signIn = function() {
+        vm.auth.signIn();
+    };
+
+    vm.photoURL = null;
 }
 
 angular
